@@ -8,6 +8,6 @@ import Login from '../../client/login';
 export default render((
     <Router history={browserHistory}>
         <Route path="/" component={Login} />
-        <Route path="/log" component={Login} />
+        <Route path="/cavalier_client" component={Login} />
     </Router>
 ), document.getElementById('root'));

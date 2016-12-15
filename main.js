@@ -5,6 +5,7 @@ const socketIo = require('socket.io')
 const webpack = require('webpack')
 const webpackDevMiddleware = require('webpack-dev-middleware')
 const webpackConfig = require('./webpack.config.js')
+const path = require('path');
 
 const r = require('rethinkdb');
 
@@ -36,8 +37,8 @@ app.post('/stock_insert', (req, res, next) => {
     res.end('done');
 })
 
-app.get('/dw', (req, res, next) => {
-    //res.redirect('/');
+app.get('*', (req, res, next) => {
+    res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
 })
 /*
 io.on('connection', socket => {

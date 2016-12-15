@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-export default class App extends React.Component {
+export default class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = { hello: 'some' };
@@ -11,6 +11,6 @@ export default class App extends React.Component {
     }
 }
 
-App.propTypes = {
+Login.propTypes = {
     hello: PropTypes.string,
 };

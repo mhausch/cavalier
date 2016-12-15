@@ -1,0 +1,21 @@
+{
+    "development": {
+        "logger": "CONSOLE",
+        "host": "localhost",
+        "port": 3000,
+        "jwtsecret": "MONDAYTUESDAYWEDNESDAY",
+        "rethinkdb": { 
+            "db": "test"
+        }
+    },
+
+    "production": {
+        "logger": "FILE",
+        "host": "localhost",        
+        "port": 3000,
+        "jwtsecret": "MONDAYTUESDAYWEDNESDAY",        
+        "rethinkdb": { 
+            "db": "test"
+        }     
+    }
+}

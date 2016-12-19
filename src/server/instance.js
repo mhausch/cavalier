@@ -6,6 +6,7 @@ const r = require('rethinkdb');
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
+const helmet = require('helmet');
 
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
@@ -83,6 +84,7 @@ inst._startServer = function () {
     // express instance
     this._express = express();
     this._express.use(webpackDevMiddleware(webpack(webpackConfig)));
+    this._express.use(helmet());
 
     // create http on express
     this._httpServer = http.createServer(this._express);

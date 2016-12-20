@@ -1,7 +1,18 @@
 const instanceIO = require('./src/server/instance.js');
+const socketioJwt = require('socketio-jwt');
 
+/*
+ * =========================================================================== *
+ * constants                                                                   *
+ * =========================================================================== *
+ */
 const ROUTE_NAMESPACE = '/cavalier/';
 
+/*
+ * =========================================================================== *
+ * Starting instance of the server                                             *
+ * =========================================================================== *
+ */
 instanceIO.start();
 
 const expressApp = instanceIO.getExpress();
@@ -33,7 +44,10 @@ expressApp.use('/*', (req, res, next) => {
  * Authentification                                                            *
  * =========================================================================== *
  */
-
+socketIO.use(socketioJwt.authorize({
+    secret: 'your secret or public key',
+    handshake: true,
+}));
 
 // app.post('/stock_insert', (req, res, next) => {
 //    // r.db('test').table('stock_data').insert({stockName: req.body.name, stockExchange: req.body.exchange, date: new Date(), price: req.body.price }).run(dbConnect);

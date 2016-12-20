@@ -42,6 +42,15 @@ inst.start = function () {
     this._startServer();
 };
 
+inst.getJWTSecretBase64 = function () {
+    const buffer = new Buffer(this._config.jwtsecret);
+    return buffer.toString('base64');
+};
+
+/**
+ * Return database connection
+ * @public
+ */
 inst.getDatabase = function () {
     return this._db;
 };
@@ -123,7 +132,7 @@ inst._connectDatabase = function () {
             throw new Error();
         }
 
-        self._initLogger.log('info', 'Database [%s] connected!', self._config.rethinkdb._db);
+        self._initLogger.log('info', 'Database [%s] connected!', self._config.rethinkdb.db);
     });
 };
 

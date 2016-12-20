@@ -7,5 +7,5 @@ const userSchema = exports = module.exports = joi.object().keys({
     firstname: joi.string().alphanum(),
     middlename: joi.string().alphanum().allow(''),
     lastname: joi.string().alphanum(),
-    birthdate: joi.date(),
+    birthdate: joi.date().allow(''),
 });

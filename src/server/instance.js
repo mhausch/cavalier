@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const winston = require('winston');
 const r = require('rethinkdb');
-
+const bodyParser = require('body-parser');
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
@@ -81,10 +81,18 @@ inst.getSocketIO = function () {
  * @private
  */
 inst._startServer = function () {
+    const self = this;
+
     // express instance
     this._express = express();
     this._express.use(webpackDevMiddleware(webpack(webpackConfig)));
+
+    // some security
     this._express.use(helmet());
+
+    // Parsers
+    this._express.use(bodyParser.urlencoded({ extended: false }));
+    this._express.use(bodyParser.json());
 
     // create http on express
     this._httpServer = http.createServer(this._express);
@@ -93,7 +101,9 @@ inst._startServer = function () {
     this._socketIO = socketIo(this._httpServer);
 
     // server listen
-    this._express.listen(3000);
+    this._express.listen(3000, () => {
+        self._initLogger.log('info', 'Server listen on port 3000');
+    });
 };
 
 /**

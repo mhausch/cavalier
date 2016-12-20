@@ -35,6 +35,8 @@ expressApp.use(ROUTE_NAMESPACE, publicRouter);
 
 // Check Index route
 expressApp.use('/*', (req, res, next) => {
+    console.log(req);
+    console.log(res);
     res.redirect('/cavalier/private');
     next();
 });
@@ -45,9 +47,13 @@ expressApp.use('/*', (req, res, next) => {
  * =========================================================================== *
  */
 socketIO.use(socketioJwt.authorize({
-    secret: 'your secret or public key',
+    secret: instanceIO.getJWTSecretBase64(),
     handshake: true,
 }));
+
+socketIO.on('connection', (socket) => {
+    console.log(socket);
+});
 
 // app.post('/stock_insert', (req, res, next) => {
 //    // r.db('test').table('stock_data').insert({stockName: req.body.name, stockExchange: req.body.exchange, date: new Date(), price: req.body.price }).run(dbConnect);

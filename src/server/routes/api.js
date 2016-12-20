@@ -10,8 +10,7 @@ const jwt = require('jsonwebtoken');
  * App Modules
  */
 const instanceIO = require('../../server/instance.js');
-const userSchema = require('../../server/schemas/userSchema.js');
-const userUnit = require('../../server/units/user.js');
+const userUnit = require('../../server/units/users.js');
 
 /*
  * Export
@@ -64,8 +63,8 @@ apiRouter.post('/api/login', (req, res, next) => {
 
         // end
         res.end('');
-    }, () => {
-        res.status(401).send('Error');
+    }, (err) => {
+        res.status(401).send(err.message);
     });
 });
 
@@ -73,44 +72,25 @@ apiRouter.post('/api/login', (req, res, next) => {
  * Create new user
  */
 apiRouter.post('/api/newuser', (req, res, next) => {
-    let isError = false;
-    const tmpUser = {
-        username: req.body.username,
-        password: req.body.password,
-        email: req.body.email,
-        firstname: 'David',
-        middlename: '',
-        lastname: 'Thomson',
-        birthdate: new Date(),
-    };
+    // call unit to save user
+    userUnit.add(req.body).then((response) => {
+        // Promise returns
+        res.status(200).send('Inserted User ' + response.username);
+    }, (err) => {
+        // Send error back
+        res.status(400).send(err.message);
+    });
+});
 
-    // validate
-    joi.validate(tmpUser, userSchema, (err, value) => {
-        if (err === null) {
-            console.log(value);
-        } else {
-            res.send({ state: 'error' });
-            res.end('done');
-            isError = true;
+apiRouter.post('/api/deleteuser', (req, res, next) => {
+    // call unit to save user
+    userUnit.delete(req.body.username).then((response) => {
+        if (response) {
+            res.status(200).send('User deleted');
         }
+    }, (err) => {
+        // Send error back
+        res.status(400).send(err.message);
     });
-
-    if (isError === true) {
-        return;
-    }
-
-    // retrieve promise
-    const promise = bcrypt.hash(tmpUser.password, 10);
-
-    // evaluate promise
-    promise.then((hash) => {
-        tmpUser.password = hash;
-        console.log(tmpUser);
-    }, (error) => {
-        console.log(error);
-    });
-
-    res.send({ state: 'ok' });
-    res.end('done');
 });
 

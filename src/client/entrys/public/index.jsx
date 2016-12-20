@@ -1,4 +1,6 @@
 //import Route from '../src/client/route/routes';
+import React, { PropTypes } from 'react';
+import ReactDOM from 'react-dom';
+import Login from './../../login';
 
-console.log('public');
-//ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<Login />, document.getElementById('root'));

@@ -102,7 +102,7 @@ inst._startServer = function () {
     this._express.use(helmet());
 
     // Parsers
-    this._express.use(bodyParser.urlencoded({ extended: false }));
+    this._express.use(bodyParser.urlencoded({ extended: true }));
     this._express.use(bodyParser.json());
 
     // create http on express

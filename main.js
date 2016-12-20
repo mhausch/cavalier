@@ -7,6 +7,13 @@ instanceIO.start();
 const expressApp = instanceIO.getExpress();
 const socketIO = instanceIO.getSocketIO();
 
+/*
+ * ---------------------------------------------------------------------------------------------- *
+ * Programmbeschreibung                                                                           *
+ * ---------------------------------------------------------------------------------------------- *
+ *
+ * 
+ */
 // Get Routes
 const privateRouter = require('./src/server/routes/private.js');
 const publicRouter = require('./src/server/routes/public.js');

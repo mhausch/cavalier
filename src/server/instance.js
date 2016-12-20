@@ -17,6 +17,8 @@ const inst = exports = module.exports = {};
 
 /**
  * Instance
+ *
+ * @method start - starting the app with config
  * @private
  */
 inst.start = function () {

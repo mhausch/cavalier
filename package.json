@@ -36,6 +36,7 @@
     "redux": "^3.6.0",
     "rethinkdb": "^2.3.3",
     "socket.io": "^1.7.1",
+    "socketio-jwt": "^4.5.0",
     "webpack": "^1.13.3",
     "winston": "^2.3.0"
   }

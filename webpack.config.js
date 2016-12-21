@@ -21,6 +21,11 @@ module.exports = [
                     },
                     exclude: /node_modules/,
                 },
+                {
+                    test: /\.css$/,
+                    loader: 'style-loader!css-loader',
+                    exclude: /node_modules/,
+                },
             ],
         },
     },
@@ -42,6 +47,11 @@ module.exports = [
                         presets: ['es2015', 'react'],
                         plugins: ['transform-class-properties'],
                     },
+                    exclude: /node_modules/,
+                },
+                {
+                    test: /\.css$/,
+                    loader: 'style-loader!css-loader',
                     exclude: /node_modules/,
                 },
             ],

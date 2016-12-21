@@ -8,7 +8,8 @@ import Application from '../../client/application';
 import Notfound404 from '../../client/notfound404';
 
 const INDEX = '/';
-const CAVALIER = '/cavalier/pub/client';
+const CAVALIER_PUB = '/cavalier/public';
+const CAVALIER_PRI = '/cavalier/private';
 
 const checkAuth = (nextState, replace) => {
     replace({
@@ -16,10 +17,21 @@ const checkAuth = (nextState, replace) => {
     });
 };
 
+const checkIsLogged = (nextState, replace) => {
+    if (window.localStorage.getItem('access_token')) {
+        browserHistory.goForward('/cavalier/private');
+    } else {
+
+    };
+
+};
+
 export default render((
     <Router history={browserHistory}>
-        <Route path={INDEX} component={Login} />
-        <Route path={CAVALIER} component={Application} onEnter={checkAuth} />
+        <Route path={INDEX} component={Login} onEnter={checkIsLogged}>
+            <Route path={CAVALIER_PUB} component={Application} onEnter={checkAuth} />
+            <Route path={CAVALIER_PRI} component={Application} />
+        </Route>
         <Route path="*" component={Notfound404} />
     </Router>
 ), document.getElementById('root'));

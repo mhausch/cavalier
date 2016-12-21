@@ -35,9 +35,7 @@ expressApp.use(ROUTE_NAMESPACE, publicRouter);
 
 // Check Index route
 expressApp.use('/*', (req, res, next) => {
-    console.log(req);
-    console.log(res);
-    res.redirect('/cavalier/private');
+    res.redirect('/cavalier/public');
     next();
 });
 

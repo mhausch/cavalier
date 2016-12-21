@@ -94,3 +94,23 @@ apiRouter.post('/api/deleteuser', (req, res, next) => {
     });
 });
 
+apiRouter.post('/api/verify', (req, res, next) => {
+    let token = null;
+
+    // Token exist?
+    if (req.body && req.body.access_token) {
+        token = req.body.access_token;
+    } else {
+        res.status(400).send('No Token found');
+    }
+
+    // Verify the token
+    jwt.verify(token, instanceIO.getJWTSecretBase64(), (err, payload) => {
+        if (err) {
+            res.status(400).send(err.message);
+        } else {
+            res.json({ valid: true });
+        }        
+        res.end('');
+    });
+});

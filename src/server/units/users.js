@@ -44,25 +44,29 @@ users.checkCredentials = function (username, password) {
         username.trim();
         password.trim();
 
+        // always save uppercase
+        const userUpper = username.toUpperCase();
+
         // Find User
-        this.usernameExist(username, (tmpuser) => {
+        this.usernameExist(userUpper, (tmpuser) => {
             if (!tmpuser) {
+                // we are done, because we got no user to compare with
                 reject(new Error('User not exists'));
+            } else {
+                // async compare
+                const bpromise = bcrypt.compare(password, tmpuser.password);
+
+                // evaluate promise
+                bpromise.then((response) => {
+                    if (response) {
+                        resolve(tmpuser);
+                    } else {
+                        reject(new Error('Password/Username incorrect'));
+                    }
+                }, (error) => {
+                    reject(new Error('Error'));
+                });
             }
-
-            // async compare
-            const bpromise = bcrypt.compare(password, tmpuser.password);
-
-            // evaluate promise
-            bpromise.then((response) => {
-                if (response) {
-                    resolve(tmpuser);
-                } else {
-                    reject(new Error('Password/Username incorrect'));
-                }
-            }, (error) => {
-                reject(new Error('Error'));
-            });
         });
     });
 };
@@ -75,25 +79,31 @@ users.checkCredentials = function (username, password) {
  */
 users.add = function (user) {
     return new Promise((resolve, reject) => {
+
         // validate
         joi.validate(user, userSchema, (err, value) => {
             if (err === null) {
                 // everthing is fine
             } else {
+                // some validation failed
                 reject(new Error('validation failed'));
                 return;
             }
         });
 
         this.usernameExist(user.username, (tmpuser) => {
-            const use = user;
+            let use = user;
 
+            // convert to uppercase
+            use.username = use.username.toUpperCase();
+
+            // if the user alrready in DB, we are done here
             if (tmpuser) {
                 reject(new Error('User already exists'));
                 return;
             }
 
-            // retrieve promise
+            // retrieve promise from encryption
             const promise = bcrypt.hash(user.password, 10);
 
             // evaluate promise
@@ -103,7 +113,9 @@ users.add = function (user) {
 
                 this.db.then((conn) => {
                     // promise on the query, calling callback
-                    r.table(constants.tables.USERS).insert(use).run(conn).then((cursor) => {
+                    r.table(constants.tables.USERS).insert(use).run(conn)
+                    // promise returns
+                    .then((cursor) => {
                         if (cursor.inserted === 1) {
                             resolve(use);
                         } else {
@@ -126,17 +138,22 @@ users.add = function (user) {
  * @param {Object} user
  * @return {Promise}
  */
-users.delete = function(username) {
+users.delete = function (username) {
     // Return new promise
     return new Promise((resolve, reject) => {
+        // always save uppercase
+        const userUpper = username.toUpperCase();
+
         // Wait for promise
         this.db.then((conn) => {
             // promise on the query, calling callback
-            r.table(constants.tables.USERS).get(username).delete().run(conn).then((cursor) => {
+            r.table(constants.tables.USERS).get(userUpper).delete().run(conn)
+            // promise returns
+            .then((cursor) => {
                 if (cursor.deleted === 1) {
                     resolve(true);
                 } else {
-                    reject(new Error('User deletion failed: ' + username));
+                    reject(new Error('User deletion failed: ' + userUpper));
                 }
             });
         }).error((err) => {

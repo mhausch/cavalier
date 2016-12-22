@@ -22,7 +22,7 @@ export default class Login extends React.Component {
             });
         } else {
 
-        };
+        }
 
         // method binding
         this.handleButtonClick = this.handleButtonClick.bind(this);
@@ -59,7 +59,8 @@ export default class Login extends React.Component {
 
     getContent() {
         if (this.state.waiting) {
-            return (<div className="sk-cube-grid">
+            return (<div className="overlay">
+              <div className="sk-cube-grid">
                 <div className="sk-cube sk-cube1" />
                 <div className="sk-cube sk-cube2" />
                 <div className="sk-cube sk-cube3" />
@@ -69,16 +70,27 @@ export default class Login extends React.Component {
                 <div className="sk-cube sk-cube7" />
                 <div className="sk-cube sk-cube8" />
                 <div className="sk-cube sk-cube9" />
+              </div>
             </div>
             );
         }
 
         return (<div>
-            <form method="post" action="/cavalier/api/login" >
-                <input type="text" name="username" placeholder="username" onChange={this.handleUsernameChange} />
-                <input type="text" name="password" placeholder="password" onChange={this.handlePasswordChange} />
-                <button type="submit" onClick={this.handleButtonClick}>Login</button>
-            </form>
+          <input
+            type="text"
+            name="username"
+            placeholder="username"
+            value={this.state.username}
+            onChange={this.handleUsernameChange}
+          />
+          <input
+            type="text"
+            name="password"
+            placeholder="password"
+            value={this.state.password}
+            onChange={this.handlePasswordChange}
+          />
+          <button onClick={this.handleButtonClick}>Login</button>
         </div>);
     }
 

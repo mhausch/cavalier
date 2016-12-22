@@ -23,6 +23,14 @@ const login = {
     },
 };
 
+const launch = {
+    method: 'get',
+    url: '/cavalier/private',
+    // responseType: 'json',
+    'Content-Type': 'application/x-www-form-urlencoded',
+    params: { access_token: '' },
+};
+
 fetch.login = function (username, password, callback) {
     login.data.username = username;
     login.data.password = password;
@@ -42,6 +50,19 @@ fetch.verify = function (token, callback) {
 
     // http request
     axios(verify).then((response) => {
+        callback(response);
+    })
+    .catch((error) => {
+        console.log(error);
+        callback(error);
+    });
+};
+
+fetch.launch = function (token, callback) {
+    launch.params.access_token = token;
+
+    // http request
+    axios(launch).then((response) => {
         callback(response);
     })
     .catch((error) => {

@@ -1,6 +1,6 @@
 const instanceIO = require('./src/server/instance.js');
 const socketioJwt = require('socketio-jwt');
-
+const path = require('path');
 /*
  * =========================================================================== *
  * constants                                                                   *
@@ -24,19 +24,24 @@ const socketIO = instanceIO.getSocketIO();
  * =========================================================================== *
  */
 // Get Routes
-const privateRouter = require('./src/server/routes/private.js');
 const publicRouter = require('./src/server/routes/public.js');
+const privateRouter = require('./src/server/routes/private.js');
 const apiRouter = require('./src/server/routes/api.js');
 
 // Register routes
-expressApp.use(ROUTE_NAMESPACE, apiRouter);
-expressApp.use(ROUTE_NAMESPACE, privateRouter);
 expressApp.use(ROUTE_NAMESPACE, publicRouter);
+expressApp.use(ROUTE_NAMESPACE, privateRouter);
+expressApp.use(ROUTE_NAMESPACE, apiRouter);
 
 // Check Index route
 expressApp.use('/*', (req, res, next) => {
+  if (req.query.access_token) {
+    res.redirect('/cavalier/private');
+  } else {
     res.redirect('/cavalier/public');
-    next();
+  }
+//    res.redirect('/cavalier/public');
+ //   next();
 });
 
 /*

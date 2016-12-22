@@ -42,8 +42,21 @@ inst.start = function () {
     this._startServer();
 };
 
+/**
+ * return bas64 jwt secret
+ * @public
+ */
 inst.getJWTSecretBase64 = function () {
     const buffer = new Buffer(this._config.jwtsecret);
+    return buffer.toString('base64');
+};
+
+/**
+ * return bas64 jwt encryption key
+ * @public
+ */
+inst.getJWTEncryptKeyBase64 = function () {
+    const buffer = new Buffer(this._config.jwtencryptkey);
     return buffer.toString('base64');
 };
 

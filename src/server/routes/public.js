@@ -8,5 +8,9 @@ const router = express.Router();
 const publicRouter = exports = module.exports = router;
 
 publicRouter.get('/public', (req, res, next) => {
-    res.sendFile(path.resolve('src', 'client', 'entrys', 'public', 'index.html'));
+    if (req.query.access_token) {
+        res.send('/cavalier/private');
+    } else {
+        res.sendFile(path.resolve('src', 'client', 'entrys', 'public', 'index.html'));
+    }
 });

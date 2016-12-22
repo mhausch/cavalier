@@ -1,15 +1,15 @@
 /*
  * Node NPM Modules
  */
+const instanceIO = require('../../server/instance.js');
 const router = require('express').Router();
-const bcrypt = require('bcryptjs');
-const joi = require('joi');
+const RequestIP = require('./../utils/requestip');
 const jwt = require('jsonwebtoken');
+const encryptor = require('simple-encryptor')(instanceIO.getJWTEncryptKeyBase64());
 
 /*
  * App Modules
  */
-const instanceIO = require('../../server/instance.js');
 const userUnit = require('../../server/units/users.js');
 
 /*
@@ -55,8 +55,14 @@ apiRouter.post('/api/login', (req, res, next) => {
         // Delete password for safety reasons
         delete user.password;
 
+        // save request ip and address src to payload
+        user.ip = new RequestIP(req).getIP();
+
         // expire 60 seconds * 60 (one hour)
-        const jwtToken = jwt.sign(user, instanceIO.getJWTSecretBase64(), { expiresIn: 60 * 60 });
+        let jwtToken = jwt.sign(user, instanceIO.getJWTSecretBase64(), { expiresIn: 60 * 60 });
+
+        // Encrypt the whole token!
+        jwtToken = encryptor.encrypt(jwtToken);
 
         // send back
         res.json({ token: jwtToken });
@@ -97,6 +103,9 @@ apiRouter.post('/api/deleteuser', (req, res, next) => {
 apiRouter.post('/api/verify', (req, res, next) => {
     let token = null;
 
+    // we get the current ip address
+    const requestIP = new RequestIP(req).getIP();
+
     // Token exist?
     if (req.body && req.body.access_token) {
         token = req.body.access_token;
@@ -104,13 +113,18 @@ apiRouter.post('/api/verify', (req, res, next) => {
         res.status(400).send('No Token found');
     }
 
+    // token are encrypted, we must decrypt them back
+    token = encryptor.decrypt(token);
+
     // Verify the token
     jwt.verify(token, instanceIO.getJWTSecretBase64(), (err, payload) => {
         if (err) {
             res.status(400).send(err.message);
-        } else {
+        } else if (payload.ip.type === requestIP.type && payload.ip.value === requestIP.value) {
             res.json({ valid: true });
-        }        
+        } else {
+            res.status(400).send('Token not valid to this connection!');
+        }
         res.end('');
     });
 });

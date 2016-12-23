@@ -11,6 +11,7 @@ const encryptor = require('simple-encryptor')(instanceIO.getJWTEncryptKeyBase64(
  * App Modules
  */
 const userUnit = require('../../server/units/users.js');
+const AuthUnit = require('../../server/units/auth.js');
 
 /*
  * Export
@@ -100,31 +101,30 @@ apiRouter.post('/api/deleteuser', (req, res, next) => {
     });
 });
 
-apiRouter.post('/api/verify', (req, res, next) => {
-    let token = null;
+apiRouter.post('/api/verify', (req, res) => {
+    // Auth unit
+    const auth = new AuthUnit();
 
     // we get the current ip address
     const requestIP = new RequestIP(req).getIP();
 
-    // Token exist?
-    if (req.body && req.body.access_token) {
-        token = req.body.access_token;
+    // check body contains something
+    if (!req.body) {
+        res.status(400).send('No payload given');
+        res.end();
+    } else if (!req.body.access_token) {
+        res.status(400).send('Payload given, but no property access_token');
+        res.end();
     } else {
-        res.status(400).send('No Token found');
-    }
-
-    // token are encrypted, we must decrypt them back
-    token = encryptor.decrypt(token);
-
-    // Verify the token
-    jwt.verify(token, instanceIO.getJWTSecretBase64(), (err, payload) => {
-        if (err) {
-            res.status(400).send(err.message);
-        } else if (payload.ip.type === requestIP.type && payload.ip.value === requestIP.value) {
+        // Verify token
+        auth.verifyToken(req.body.access_token, requestIP).then(() => {
+            // everything is fine
             res.json({ valid: true });
-        } else {
-            res.status(400).send('Token not valid to this connection!');
-        }
-        res.end('');
-    });
+            res.end();
+        }, (error) => {
+            // token dont match requirements!
+            res.status(400).send(error.message);
+            res.end();
+        });
+    }
 });

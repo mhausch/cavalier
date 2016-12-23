@@ -7,6 +7,12 @@ const router = express.Router();
 // Export
 const publicRouter = exports = module.exports = router;
 
+publicRouter.use((req, res, next) => {
+
+    res.redirect('public');
+    next();
+});
+
 publicRouter.get('/public', (req, res, next) => {
     if (req.query.access_token) {
         res.send('/cavalier/private');

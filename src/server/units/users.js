@@ -79,7 +79,6 @@ users.checkCredentials = function (username, password) {
  */
 users.add = function (user) {
     return new Promise((resolve, reject) => {
-
         // validate
         joi.validate(user, userSchema, (err, value) => {
             if (err === null) {

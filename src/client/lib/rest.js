@@ -25,7 +25,7 @@ const login = {
 
 const launch = {
     method: 'get',
-    url: '/cavalier/private',
+    url: '/',
     // responseType: 'json',
     'Content-Type': 'application/x-www-form-urlencoded',
     params: { access_token: '' },

@@ -7,6 +7,7 @@ const path = require('path');
  * =========================================================================== *
  */
 const ROUTE_NAMESPACE = '/cavalier/';
+const INDEX = '/';
 
 /*
  * =========================================================================== *
@@ -23,26 +24,117 @@ const socketIO = instanceIO.getSocketIO();
  * Routes                                                                      *
  * =========================================================================== *
  */
-// Get Routes
-const publicRouter = require('./src/server/routes/public.js');
-const privateRouter = require('./src/server/routes/private.js');
-const apiRouter = require('./src/server/routes/api.js');
+// // Get Routes
+// const indexRouter = require('./src/server/routes/index.js');
+// const publicRouter = require('./src/server/routes/public.js');
+// const privateRouter = require('./src/server/routes/private.js');
+ const apiRouter = require('./src/server/routes/api.js');
 
-// Register routes
-expressApp.use(ROUTE_NAMESPACE, publicRouter);
-expressApp.use(ROUTE_NAMESPACE, privateRouter);
+// // Use Routers
+// expressApp.use(INDEX, indexRouter);
+// expressApp.use(ROUTE_NAMESPACE, publicRouter);
+// expressApp.use(ROUTE_NAMESPACE, privateRouter);
 expressApp.use(ROUTE_NAMESPACE, apiRouter);
+const AuthUnit = require('./src/server/units/auth.js');
+const RequestIP = require('./src/server/utils/requestip');
 
-// Check Index route
-expressApp.use('/*', (req, res, next) => {
-  if (req.query.access_token) {
-    res.redirect('/cavalier/private');
-  } else {
-    res.redirect('/cavalier/public');
-  }
-//    res.redirect('/cavalier/public');
- //   next();
+
+expressApp.use('/cavalier/', function(req, res, next) {
+  console.log('%s %s', req.method, req.url);
+  next();
 });
+
+expressApp.get('/cavalier/', function(req, res, next) {
+    res.send('2312');
+});
+
+expressApp.get('/cavalier/public', function(req, res, next) {
+    res.sendFile(path.resolve('src', 'client', 'entrys', 'public', 'index.html'));
+});
+ 
+expressApp.get('/cavalier/private', function(req, res, next) {
+    res.sendFile(path.resolve('src', 'client', 'entrys', 'private', 'index.html'));
+});
+
+expressApp.use((req, res, next) => {
+    next();
+});
+
+
+expressApp.get('/*', function(req, res, next) {
+    const auth = new AuthUnit();
+    const requestIP = new RequestIP(req).getIP();
+
+    if (req.url) {
+        auth.verifyToken(req.url.slice(15), requestIP).then(() => {
+            // everthing is fine
+            res.redirect('/cavalier/private');
+        }, () => {
+            // next middleware or route
+            res.redirect('/cavalier/public');
+            
+        });
+    } else {
+        res.redirect('/cavalier/public');
+        
+    }
+});
+ 
+
+// expressApp.use('/', (req, res, next) => {
+//     const auth = new AuthUnit();
+//     const requestIP = new RequestIP(req).getIP();
+
+//     if (req.query.access_token) {
+//         auth.verifyToken(req.query.access_token, requestIP).then(() => {
+//             // everthing is fine
+//             res.redirect('/cavalier/private');
+//         }, () => {
+//             // next middleware or route
+//             next();
+//         });
+//     }
+//     next();
+// });
+
+// expressApp.get('/', (req, res) => {
+//     res.redirect('/cavalier/public');
+// });
+
+// expressApp.use('/cavalier/', (req, res, next) => {
+//     const auth = new AuthUnit();
+//     const requestIP = new RequestIP(req).getIP();
+
+//     if (req.query.access_token) {
+//         auth.verifyToken(req.query.access_token, requestIP).then(() => {
+//             // everthing is fine
+//             res.redirect('/cavalier/private');
+//         }, () => {
+//             // next middleware or route
+//             next();
+//         });
+//     }
+//     next();
+// });
+
+// expressApp.get('/private', (req, res, next) => {
+//     res.redirect('www.google.de');
+// });
+
+// expressApp.get('/public', (req, res, next) => {
+//     res.redirect('www.facebook.com');
+// });
+
+// // Check Index route
+// expressApp.use('/*', (req, res, next) => {
+//   // if (req.query.access_token) {
+//   //   res.redirect('/cavalier/private');
+//   // } else {
+//   //   res.redirect('/cavalier/public');
+//   // }
+// //    res.redirect('/cavalier/public');
+//  //   next();
+// });
 
 /*
  * =========================================================================== *

@@ -20,7 +20,7 @@ export default class Login extends React.Component {
             // fetch.launch(token, (response) => {
             //     console.log(response);
             // });
-            window.location.href = '/?access_token=' + token;
+            window.location.href = '/?access_token=' + encodeURI(token);
         } else {
 
         }

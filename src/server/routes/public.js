@@ -8,12 +8,12 @@ const router = express.Router();
 const publicRouter = exports = module.exports = router;
 
 publicRouter.use((req, res, next) => {
-
-    res.redirect('public');
-    next();
+    console.log('retardt');
+    // res.redirect('public');
+     next();
 });
 
-publicRouter.get('/public', (req, res, next) => {
+publicRouter.get('/*', (req, res, next) => {
     if (req.query.access_token) {
         res.send('/cavalier/private');
     } else {

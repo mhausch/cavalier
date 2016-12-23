@@ -1,4 +1,9 @@
 /*
+ * =========================================================================== *
+ * Imports                                                                     *
+ * =========================================================================== *
+ */
+/*
  * Node NPM Modules
  */
 const instanceIO = require('../../server/instance.js');
@@ -14,17 +19,21 @@ const userUnit = require('../../server/units/users.js');
 const AuthUnit = require('../../server/units/auth.js');
 
 /*
- * Export
+ * =========================================================================== *
+ * Export                                                                      *
+ * =========================================================================== *
  */
 const apiRouter = exports = module.exports = router;
 
 /*
  * =========================================================================== *
- * GET - Routes                                                                *
+ * Middleware                                                                     *
  * =========================================================================== *
  */
-apiRouter.get('/api', (req, res, next) => {
-    res.status(204);
+apiRouter.use((req, res, next) => {
+    console.log('api');
+    // res.redirect('public');
+    next();
 });
 
 /*
@@ -32,11 +41,10 @@ apiRouter.get('/api', (req, res, next) => {
  * POST - Routes                                                               *
  * =========================================================================== *
  */
-
 /*
  * Login - check credentials, return token
  */
-apiRouter.post('/api/login', (req, res, next) => {
+apiRouter.post('/login', (req, res, next) => {
     // No data was sent
     if (req.body.username === undefined || req.body.username === undefined) {
         res.status(400).send('Undefined payload on request!');
@@ -78,7 +86,7 @@ apiRouter.post('/api/login', (req, res, next) => {
 /*
  * Create new user
  */
-apiRouter.post('/api/newuser', (req, res, next) => {
+apiRouter.post('/newuser', (req, res, next) => {
     // call unit to save user
     userUnit.add(req.body).then((response) => {
         // Promise returns
@@ -89,7 +97,10 @@ apiRouter.post('/api/newuser', (req, res, next) => {
     });
 });
 
-apiRouter.post('/api/deleteuser', (req, res, next) => {
+/*
+ * Delete User by username
+ */
+apiRouter.post('/deleteuser', (req, res, next) => {
     // call unit to save user
     userUnit.delete(req.body.username).then((response) => {
         if (response) {
@@ -101,7 +112,10 @@ apiRouter.post('/api/deleteuser', (req, res, next) => {
     });
 });
 
-apiRouter.post('/api/verify', (req, res) => {
+/*
+ * Verify token
+ */
+apiRouter.post('/verify', (req, res) => {
     // Auth unit
     const auth = new AuthUnit();
 
@@ -127,4 +141,22 @@ apiRouter.post('/api/verify', (req, res) => {
             res.end();
         });
     }
+});
+
+/*
+ * =========================================================================== *
+ * Non Specific GET - Routes                                                   *
+ * =========================================================================== *
+ */
+apiRouter.get('/*', (req, res, next) => {
+    res.status(405).send('API is only for POST').end();
+});
+
+/*
+ * =========================================================================== *
+ * Non Specific POST - Routes                                                  *
+ * =========================================================================== *
+ */
+apiRouter.post('/*', (req, res, next) => {
+    res.status(404).end();
 });

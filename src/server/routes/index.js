@@ -19,21 +19,9 @@ indexRouter.use((req, res, next) => {
             res.redirect('/cavalier/private');
         }, () => {
             // next middleware or route
-            next();
+            //next();
         });
     }
-    next();
-});
-
-indexRouter.use((req, res, next) => {
     res.redirect('/cavalier/public');
-    next();
 });
 
-// indexRouter.get('/public', (req, res, next) => {
-//     if (req.query.access_token) {
-//         res.send('/cavalier/private');
-//     } else {
-//         res.sendFile(path.resolve('src', 'client', 'entrys', 'public', 'index.html'));
-//     }
-// });

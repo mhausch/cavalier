@@ -6,6 +6,8 @@
 const instanceIO = require('./src/server/instance.js');
 const socketioJwt = require('socketio-jwt');
 
+instanceIO.start();
+
 // Get Routes
 const indexRouter = require('./src/server/routes/index.js');
 const publicRouter = require('./src/server/routes/public.js');
@@ -24,11 +26,9 @@ const INDEX = '/*';
 
 /*
  * =========================================================================== *
- * Starting instance of the server                                             *
+ * Get Frame from instance                                                     *
  * =========================================================================== *
  */
-instanceIO.start();
-
 const expressApp = instanceIO.getExpress();
 const socketIO = instanceIO.getSocketIO();
 

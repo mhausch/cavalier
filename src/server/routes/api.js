@@ -71,7 +71,7 @@ apiRouter.post('/login', (req, res, next) => {
         let jwtToken = jwt.sign(user, instanceIO.getJWTSecretBase64(), { expiresIn: 60 * 60 });
 
         // Encrypt the whole token!
-        jwtToken = encryptor.encrypt(jwtToken);
+        // jwtToken = encryptor.encrypt(jwtToken);
 
         // send back
         res.json({ token: jwtToken });

@@ -8,6 +8,9 @@ const http = require('http');
 const socketIo = require('socket.io');
 const helmet = require('helmet');
 
+const passport = require('passport');
+const passportJWT = require('passport-jwt');
+
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackConfig = require('../../webpack.config.js');
@@ -110,6 +113,21 @@ inst._startServer = function () {
     // express instance
     this._express = express();
     this._express.use(webpackDevMiddleware(webpack(webpackConfig)));
+
+    const ExtractJWT = passportJWT.ExtractJwt;
+    const JWTStrategy = passportJWT.Strategy;
+
+    const jwtOption = {
+        jwtFromRequest: ExtractJWT.fromAuthHeader(),
+        secretOrKey: self.getJWTSecretBase64(),
+    };
+    const strategy = new JWTStrategy(jwtOption, (payload, next) => {
+        console.log(payload);
+        next(null, payload);
+    });
+
+    passport.use(strategy);
+    this._express.use(passport.initialize());
 
     // some security
     this._express.use(helmet());

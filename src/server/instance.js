@@ -15,6 +15,9 @@ const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackConfig = require('../../webpack.config.js');
 
+const ExtractJWT = passportJWT.ExtractJwt;
+const JWTStrategy = passportJWT.Strategy;
+
 // Export
 const inst = exports = module.exports = {};
 
@@ -114,9 +117,7 @@ inst._startServer = function () {
     this._express = express();
     this._express.use(webpackDevMiddleware(webpack(webpackConfig)));
 
-    const ExtractJWT = passportJWT.ExtractJwt;
-    const JWTStrategy = passportJWT.Strategy;
-
+    // Authentification via passport
     const jwtOption = {
         jwtFromRequest: ExtractJWT.fromAuthHeader(),
         secretOrKey: self.getJWTSecretBase64(),

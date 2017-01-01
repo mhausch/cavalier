@@ -26,6 +26,10 @@ module.exports = [
                     loader: 'style-loader!css-loader',
                     exclude: /node_modules/,
                 },
+                {
+                    test: /\.scss$/,
+                    loaders: ['style', 'css', 'sass'],
+                },
             ],
         },
     },
@@ -53,6 +57,10 @@ module.exports = [
                     test: /\.css$/,
                     loader: 'style-loader!css-loader',
                     exclude: /node_modules/,
+                },
+                {
+                    test: /\.scss$/,
+                    loaders: ['style', 'css', 'sass'],
                 },
             ],
         },

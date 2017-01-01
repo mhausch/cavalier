@@ -2,10 +2,16 @@ const instanceIO = require('../../server/instance.js');
 const encryptor = require('simple-encryptor')(instanceIO.getJWTEncryptKeyBase64());
 const jwt = require('jsonwebtoken');
 
+
 const auth = exports = module.exports = function Auth() {
 
 };
 
+/**
+ * @param {any} token
+ * @param {any} ip
+ * @returns
+ */
 auth.prototype.verifyToken = function (token, ip) {
     return new Promise((resolve, reject) => {
         // decrypted Version of the token
@@ -29,6 +35,3 @@ auth.prototype.verifyToken = function (token, ip) {
         });
     });
 };
-
-
-

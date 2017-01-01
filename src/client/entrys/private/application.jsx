@@ -1,5 +1,7 @@
 import React, { PropTypes } from 'react';
 
+require('./sass/index.scss');
+
 export default class Application extends React.Component {
     constructor(props) {
         super(props);
@@ -7,7 +9,7 @@ export default class Application extends React.Component {
     }
 
     render() {
-        return <div>Application</div>;
+        return <div className="blue">Application</div>;
     }
 }
 

@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
-import axios from 'axios';
-import fetch from './lib/rest';
+import fetch from './../../lib/rest';
 
+require('./../../sass/index.scss');
 
 export default class Login extends React.Component {
     constructor(props) {
@@ -76,7 +76,8 @@ export default class Login extends React.Component {
             );
         }
 
-        return (<div>
+        return (<div className="blue">
+            <h1>Hello</h1>       
             <input
                 type="text"
                 name="username"

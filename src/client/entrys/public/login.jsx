@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import fetch from './../../lib/rest';
 
-require('./../../sass/index.scss');
+require('./../../sass/login.scss');
 
 export default class Login extends React.Component {
     constructor(props) {
@@ -31,6 +31,49 @@ export default class Login extends React.Component {
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
     }
 
+    getContent() {
+        if (this.state.waiting) {
+            return (<div className="overlay">
+                <div className="sk-cube-grid">
+                    <div className="sk-cube sk-cube1" />
+                    <div className="sk-cube sk-cube2" />
+                    <div className="sk-cube sk-cube3" />
+                    <div className="sk-cube sk-cube4" />
+                    <div className="sk-cube sk-cube5" />
+                    <div className="sk-cube sk-cube6" />
+                    <div className="sk-cube sk-cube7" />
+                    <div className="sk-cube sk-cube8" />
+                    <div className="sk-cube sk-cube9" />
+                </div>
+            </div>
+            );
+        }
+
+        return (<div className="container">
+            <div className="row center-md">
+                <div className="col-xs-12 col-lg-6">
+                    <h1>Hello</h1>
+                </div>
+            </div>
+            <input
+                type="text"
+                name="username"
+                placeholder="username"
+                value={this.state.username}
+                onChange={this.handleUsernameChange}
+            />
+            <input
+                type="text"
+                name="password"
+                placeholder="password"
+                value={this.state.password}
+                onChange={this.handlePasswordChange}
+            />
+            <button onClick={this.handleButtonClick}>Login</button>
+
+        </div>);
+    }
+
     handlePasswordChange(event) {
         this.setState({ password: event.target.value });
     }
@@ -56,44 +99,6 @@ export default class Login extends React.Component {
             }
         });
         event.preventDefault();
-    }
-
-    getContent() {
-        if (this.state.waiting) {
-            return (<div className="overlay">
-                <div className="sk-cube-grid">
-                    <div className="sk-cube sk-cube1" />
-                    <div className="sk-cube sk-cube2" />
-                    <div className="sk-cube sk-cube3" />
-                    <div className="sk-cube sk-cube4" />
-                    <div className="sk-cube sk-cube5" />
-                    <div className="sk-cube sk-cube6" />
-                    <div className="sk-cube sk-cube7" />
-                    <div className="sk-cube sk-cube8" />
-                    <div className="sk-cube sk-cube9" />
-                </div>
-            </div>
-            );
-        }
-
-        return (<div className="blue">
-            <h1>Hello</h1>       
-            <input
-                type="text"
-                name="username"
-                placeholder="username"
-                value={this.state.username}
-                onChange={this.handleUsernameChange}
-            />
-            <input
-                type="text"
-                name="password"
-                placeholder="password"
-                value={this.state.password}
-                onChange={this.handlePasswordChange}
-            />
-            <button onClick={this.handleButtonClick}>Login</button>
-        </div>);
     }
 
     render() {

@@ -1,0 +1,58 @@
+/*
+ * line-height
+ */
+$line_height: 20px;
+$line_height_sm: 12px;
+$line_height_lg: 24px;
+
+/*
+ * border
+ */
+$border_color: #e6e6e6;
+$border_width: 1px;
+$border_radius: 1px;
+
+/*
+ * Fontsize
+ */
+$fontsize: 14px;
+$fontsize_sm: $fontsize - 2;
+$fontsize_lg: $fontsize + 6;
+
+$font_color: darken( $border_color, 40%);
+
+/*
+ * Paddings
+ */
+$padding_h: 8px;
+$padding_v: 10px;
+
+$padding_h_sm: $padding_h - 4;
+$padding_v_sm: $padding_v;
+
+$padding_h_lg: $padding_h + 4;
+$padding_v_lg: $padding_v;
+
+.input {
+    outline: none;
+    width: 100%;
+    border: $border_width solid $border_color;
+    line-height: $line_height;
+    padding: $padding_h $padding_v;
+    font-size: $fontsize;
+    color: $font_color;
+}
+
+.input.no-border {
+    border: none;
+}
+
+.input.sm {
+    line-height: $line_height_sm;
+    font-size: $fontsize_sm;
+}
+
+.input.lg {
+    line-height: $line_height_lg;
+    font-size: $fontsize_lg;
+}

@@ -1,0 +1,112 @@
+$type_danger_color: #eb5047;
+$type_warning_color: #eb5047;
+$type_clean_color: #ffffff;
+$type_default_color: #519fce;
+$type_disabled_color: #f2f2f2;
+
+/*
+ * Font size
+ */
+$fontsize: 14px;
+$fontsize_sm: $fontsize - 2;
+$fontsize_lg: $fontsize + 6;
+
+/*
+ * line-height
+ */
+$line_height: 20px;
+$line_height_sm: 12px;
+$line_height_lg: 24px;
+
+/*
+ * Paddings
+ */
+$padding_h: 8px;
+$padding_v: 3px;
+
+$padding_h_sm: $padding_h - 4;
+$padding_v_sm: $padding_v;
+
+$padding_h_lg: $padding_h + 4;
+$padding_v_lg: $padding_v;
+
+/*
+ * Borders
+ */
+$border_width: 1px;
+$border_radius: 3px;
+
+.button {
+    width: 100%;
+    border: $border_width solid;
+    border-radius: $border_radius;
+    outline: none;
+    font-size: $fontsize;
+    line-height: $line_height;
+    padding: $padding_h $padding_v;
+}
+
+.button.auto {
+    width: auto;
+}
+
+.button:hover {
+    cursor: pointer;
+}
+
+.button.sm {
+    font-size: $fontsize_sm;
+    padding: $padding_h_sm $padding_v_sm;
+}
+
+.button.lg {
+    font-size: $fontsize_lg;
+    padding: $padding_h_lg $padding_v_lg;
+}
+
+//clean
+.button.clean {
+    background-color: $type_clean_color;
+    border-color: darken( $type_clean_color, 10%);
+}
+
+.button.clean:hover {
+    transition: all 0.6s ease-in-out 0s;
+    background-color: darken( $type_clean_color, 10%);
+    border-color: darken( $type_clean_color, 10%);
+}
+
+// danger
+.button.danger {
+    background-color: $type_danger_color;
+    border-color: $type_danger_color;
+}
+
+.button.danger:hover {
+    transition: all 0.6s ease-in-out 0s;
+    background-color: darken( $type_danger_color, 10%);
+    border-color: darken( $type_danger_color, 10%);
+}
+
+// default
+.button.default {
+    background-color: $type_default_color;
+    border-color: $type_default_color;
+}
+
+.button.default:hover {
+    transition: all 0.6s ease-in-out 0s;
+    background-color: darken( $type_default_color, 10%);
+    border-color: darken( $type_default_color, 10%);
+}
+
+
+// disabled
+.button.disabled {
+    background-color: $type_disabled_color;
+    border-color: $type_disabled_color;
+}
+
+.button.disabled:hover {
+    cursor: default;
+}

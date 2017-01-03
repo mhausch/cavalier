@@ -27,8 +27,8 @@ const launch = {
     method: 'get',
     url: '/',
     // responseType: 'json',
-    'Content-Type': 'application/x-www-form-urlencoded',
-    params: { access_token: '' },
+    // 'Content-Type': 'application/x-www-form-urlencoded',
+    headers: { Authorization: 'JWT ' },
 };
 
 fetch.login = function (username, password, callback) {
@@ -59,7 +59,7 @@ fetch.verify = function (token, callback) {
 };
 
 fetch.launch = function (token, callback) {
-    launch.params.access_token = token;
+    launch.headers.Authorization += token;
 
     // http request
     axios(launch).then((response) => {

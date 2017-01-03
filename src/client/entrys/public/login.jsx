@@ -1,5 +1,7 @@
 import React, { PropTypes } from 'react';
 import fetch from './../../lib/rest';
+import CButton from '../../components/button/button';
+import CInput from '../../components/input/input';
 
 require('./../../sass/login.scss');
 
@@ -14,7 +16,7 @@ export default class Login extends React.Component {
         };
 
         // get access_token
-        const token = window.localStorage.getItem('access_token');
+        const token = window.localStorage.getItem('cav_access_token');
 
         if (token) {
             // fetch.launch(token, (response) => {
@@ -51,26 +53,45 @@ export default class Login extends React.Component {
 
         return (<div className="container">
             <div className="row center-md">
-                <div className="col-xs-12 col-lg-6">
-                    <h1>Hello</h1>
+                <div className="col-xs-12 col-sm-8 col-lg-4">
+                    <div className="row">
+                        <div className="col-xs-12">
+                            <div className="bx">
+                                <CInput
+                                    type="text"
+                                    name="username"
+                                    placeholder="username"
+                                    value={this.state.username}
+                                    onChange={this.handleUsernameChange}
+                                />
+                            </div>
+                        </div>
+                        <div className="col-xs-12">
+                            <div className="bx">
+                                <CInput
+                                    type="text"
+                                    name="password"
+                                    placeholder="password"
+                                    value={this.state.password}
+                                    onChange={this.handlePasswordChange}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-xs-12 col-sm-4">
+                            <div className="bx">
+                                <CButton onClick={this.handleButtonClick} value="Login" />
+                            </div>
+                        </div>
+                        <div className="col-xs-12 col-sm-4">
+                            <div className="bx">
+                                <CButton onClick={this.handleButtonClick} type="clean" value="help" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <input
-                type="text"
-                name="username"
-                placeholder="username"
-                value={this.state.username}
-                onChange={this.handleUsernameChange}
-            />
-            <input
-                type="text"
-                name="password"
-                placeholder="password"
-                value={this.state.password}
-                onChange={this.handlePasswordChange}
-            />
-            <button onClick={this.handleButtonClick}>Login</button>
-
         </div>);
     }
 
@@ -90,9 +111,18 @@ export default class Login extends React.Component {
         fetch.login(this.state.username, this.state.password, (response) => {
             if (response && response.data && response.data.token) {
                 // save storage for the future
-                window.localStorage.setItem('access_token', response.data.token);
+                window.localStorage.setItem('cav_access_token', response.data.token);
+                //fetch.launch(response.data.token, (response) => {
+                  //  console.log(response);
+                //});
+
+                let req = new XMLHttpRequest();
+                req.open('GET', '/cavalier/private', true);
+                req.setRequestHeader('Authorization', 'JWT ' + response.data.token);
+                req.send();
+
+
                 this.setState({ waiting: false });
-                window.location.href = '/?access_token=' + response.data.token;
             } else {
                 // delete cache
                 window.localStorage.removeItem('access_token');

@@ -17,6 +17,16 @@ $break_lg_min: 1280px;
     padding-right: 20px;
 }
 
+// boxes
+.bx {
+  padding: 10px;
+}
+
+.bx.hz32{
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
 // rows
 .row {
   box-sizing: border-box;

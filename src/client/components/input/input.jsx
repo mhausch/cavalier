@@ -7,9 +7,23 @@ export default class CInput extends React.Component {
         super(props);
     }
 
+    getClassName() {
+        let cls = 'input';
+
+        if (this.props.noBorderBot) {
+            cls = cls + ' no-border-bot';
+        }
+
+        if (this.props.noBorder) {
+            cls = cls + ' no-border';
+        }
+
+        return cls;
+    }
+
     render() {
         return (<input
-            className="input"
+            className={this.getClassName()}
             type={this.props.type}
             placeholder={this.props.placeholder}
             value={this.props.value}

@@ -1,9 +1,9 @@
 /*
  * line-height
  */
-$line_height: 20px;
-$line_height_sm: 12px;
-$line_height_lg: 24px;
+$line_height: 30px;
+$line_height_sm: 16px;
+$line_height_lg: 42px;
 
 /*
  * border
@@ -33,7 +33,13 @@ $padding_v_sm: $padding_v;
 $padding_h_lg: $padding_h + 4;
 $padding_v_lg: $padding_v;
 
+/*
+ * text indent
+ */
+$text_indent: 16px;
+
 .input {
+    text-indent: $text_indent;
     outline: none;
     width: 100%;
     border: $border_width solid $border_color;
@@ -45,6 +51,10 @@ $padding_v_lg: $padding_v;
 
 .input.no-border {
     border: none;
+}
+
+.input.no-border-bot {
+    border-bottom: none;
 }
 
 .input.sm {

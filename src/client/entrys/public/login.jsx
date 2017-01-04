@@ -53,21 +53,18 @@ export default class Login extends React.Component {
 
         return (<div className="container">
             <div className="row center-md">
-                <div className="col-xs-12 col-sm-8 col-lg-4">
+                <div className="col-xs-12 col-sm-8 col-lg-3">
                     <div className="row">
                         <div className="col-xs-12">
-                            <div className="bx">
+                            <div className="bx hz32">
                                 <CInput
                                     type="text"
                                     name="username"
                                     placeholder="username"
                                     value={this.state.username}
                                     onChange={this.handleUsernameChange}
+                                    noBorderBot={true}
                                 />
-                            </div>
-                        </div>
-                        <div className="col-xs-12">
-                            <div className="bx">
                                 <CInput
                                     type="text"
                                     name="password"

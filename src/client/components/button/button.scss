@@ -1,7 +1,7 @@
 $type_danger_color: #eb5047;
 $type_warning_color: #eb5047;
 $type_clean_color: #ffffff;
-$type_default_color: #519fce;
+$type_default_color: #709EED;
 $type_disabled_color: #f2f2f2;
 
 /*
@@ -12,11 +12,17 @@ $fontsize_sm: $fontsize - 2;
 $fontsize_lg: $fontsize + 6;
 
 /*
+ * Font color
+ */
+$fontcolor: white;
+$fontcolor_clean: #919191;
+
+/*
  * line-height
  */
-$line_height: 20px;
-$line_height_sm: 12px;
-$line_height_lg: 24px;
+$line_height: 24px;
+$line_height_sm: 16px;
+$line_height_lg: 32px;
 
 /*
  * Paddings
@@ -44,6 +50,7 @@ $border_radius: 3px;
     font-size: $fontsize;
     line-height: $line_height;
     padding: $padding_h $padding_v;
+    color: $fontcolor;
 }
 
 .button.auto {
@@ -68,12 +75,13 @@ $border_radius: 3px;
 .button.clean {
     background-color: $type_clean_color;
     border-color: darken( $type_clean_color, 10%);
+    color: $fontcolor_clean;
 }
 
 .button.clean:hover {
     transition: all 0.6s ease-in-out 0s;
-    background-color: darken( $type_clean_color, 10%);
-    border-color: darken( $type_clean_color, 10%);
+    background-color: darken( $type_clean_color, 5%);
+    border-color: darken( $type_clean_color, 5%);
 }
 
 // danger
@@ -84,8 +92,8 @@ $border_radius: 3px;
 
 .button.danger:hover {
     transition: all 0.6s ease-in-out 0s;
-    background-color: darken( $type_danger_color, 10%);
-    border-color: darken( $type_danger_color, 10%);
+    background-color: darken( $type_danger_color, 5%);
+    border-color: darken( $type_danger_color, 5%);
 }
 
 // default

@@ -1,5 +1,8 @@
-//import Route from '../src/client/route/routes';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Application from './application';
 
-console.log('private');
+// Render Login
+ReactDOM.render(<Application />, document.getElementById('root'));
 
-//ReactDOM.render(<App />, document.getElementById('root'));
+// ReactDOM.render(<App />, document.getElementById('root'));

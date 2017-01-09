@@ -15,7 +15,7 @@ const auth = exports = module.exports = function Auth() {
 auth.prototype.verifyToken = function (token, ip) {
     return new Promise((resolve, reject) => {
         // decrypted Version of the token
-        const tmpToken = encryptor.decrypt(token);
+        // const tmpToken = encryptor.decrypt(token);
 
         // check given token
         if (!token) {
@@ -24,7 +24,7 @@ auth.prototype.verifyToken = function (token, ip) {
         }
 
         // Verify the token
-        jwt.verify(tmpToken, instanceIO.getJWTSecretBase64(), (err, payload) => {
+        jwt.verify(token, instanceIO.getJWTSecretBase64(), (err, payload) => {
             if (err) {
                 reject(new Error('Invalid Token!'));
             } else if (payload.ip.type === ip.type && payload.ip.value === ip.value) {

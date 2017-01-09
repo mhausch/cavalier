@@ -115,11 +115,18 @@ inst._startServer = function () {
 
     // express instance
     this._express = express();
+    
+    // create http on express
+    this._httpServer = http.createServer(this._express);
+
+    // socket io
+    this._socketIO = socketIo(this._httpServer);
+
     this._express.use(webpackDevMiddleware(webpack(webpackConfig)));
 
     // Authentification via passport
     const jwtOption = {
-        jwtFromRequest: ExtractJWT.fromAuthHeader(),
+        jwtFromRequest: ExtractJWT.fromUrlQueryParameter('cav_token'),
         secretOrKey: self.getJWTSecretBase64(),
     };
     const strategy = new JWTStrategy(jwtOption, (payload, next) => {
@@ -137,12 +144,18 @@ inst._startServer = function () {
     this._express.use(bodyParser.urlencoded({ extended: true }));
     this._express.use(bodyParser.json());
 
-    // create http on express
-    this._httpServer = http.createServer(this._express);
+    this._socketIO.on('connection', (socket) => {
+        console.log(socket);
 
-    // socket io
-    this._socketIO = socketIo(this._httpServer);
+        socket.on('message', (gg) => {
+            console.log('socket');
+        });
 
+    });
+};
+
+inst.listen = function () {
+    const self = this;
     // server listen
     this._express.listen(3000, () => {
         self._initLogger.log('info', 'Server listen on port 3000');

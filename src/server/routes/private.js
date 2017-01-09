@@ -30,4 +30,5 @@ privateRouter.use(passport.authenticate('jwt', { session: false, failureRedirect
 // If the middleware is passed, we send our private app
 privateRouter.get('/', (req, res, next) => {
     res.sendFile(path.resolve('src', 'client', 'entrys', 'private', 'index.html'));
+     //res.redirect('/cavalier/private/go');
 });

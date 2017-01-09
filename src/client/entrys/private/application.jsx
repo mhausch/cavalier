@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
-
-require('./sass/index.scss');
+import io from 'socket.io-client';
 
 export default class Application extends React.Component {
     constructor(props) {
@@ -8,8 +7,18 @@ export default class Application extends React.Component {
         this.state = { hello: 'some' };
     }
 
+    componentDidMount() {
+        this.socket = io.connect('/');
+        this.socket.emit('message', '');
+        console.log(this.socket.name);
+    }
+
+    handlecl() {
+        this.socket.emit('message', 'gg');
+    }
+
     render() {
-        return <div className="blue">Application</div>;
+        return <div className="blue"><input type="button" onClick={this.handlecl.bind(this)} />Application</div>;
     }
 }
 

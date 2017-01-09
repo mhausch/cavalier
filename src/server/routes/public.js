@@ -29,6 +29,7 @@ publicRouter.use((req, res, next) => {
         // if there is a valid user we now that the token is valid so 
         // we can trigger private
         if (user) {
+            res.cookie({jwt: ''});
             // return res.status(401).send(info).end();
             res.redirect('/cavalier/private');
         } else {

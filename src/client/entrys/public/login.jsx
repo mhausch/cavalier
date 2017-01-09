@@ -16,13 +16,14 @@ export default class Login extends React.Component {
         };
 
         // get access_token
-        const token = window.localStorage.getItem('cav_access_token');
+        const token = window.localStorage.getItem('cav_token');
 
         if (token) {
             // fetch.launch(token, (response) => {
             //     console.log(response);
             // });
            // window.location.href = '/?access_token=' + encodeURI(token);
+           window.location.href = '/cavalier/private/?cav_token=' + encodeURI(token);
         } else {
 
         }
@@ -108,16 +109,18 @@ export default class Login extends React.Component {
         fetch.login(this.state.username, this.state.password, (response) => {
             if (response && response.data && response.data.token) {
                 // save storage for the future
-                window.localStorage.setItem('cav_access_token', response.data.token);
+                window.localStorage.setItem('cav_token', response.data.token);
                 //fetch.launch(response.data.token, (response) => {
                   //  console.log(response);
                 //});
 
-                let req = new XMLHttpRequest();
-                req.open('GET', '/cavalier/private', true);
-                req.setRequestHeader('Authorization', 'JWT ' + response.data.token);
-                req.send();
+                window.location.href = '/cavalier/private/?cav_token=' + encodeURI(response.data.token);
 
+                // let req = new XMLHttpRequest();
+                // req.open('GET', '/cavalier/private', true);
+                // req.setRequestHeader('Authorization', 'JWT ' + response.data.token);
+
+                // req.send(null);
 
                 this.setState({ waiting: false });
             } else {
@@ -125,7 +128,7 @@ export default class Login extends React.Component {
                 window.localStorage.removeItem('access_token');
             }
         });
-        event.preventDefault();
+       // event.preventDefault();
     }
 
     render() {

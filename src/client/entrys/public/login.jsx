@@ -1,7 +1,11 @@
 import React, { PropTypes } from 'react';
-import fetch from './../../lib/rest';
+import { Translate, I18n } from 'react-redux-i18n';
+import { loadTranslations, setLocale, syncTranslationWithStore, i18nReducer } from 'react-redux-i18n';
+
+
 import CButton from '../../components/button/button';
 import CInput from '../../components/input/input';
+
 
 require('./../../sass/login.scss');
 
@@ -17,6 +21,7 @@ export default class Login extends React.Component {
 
         // method binding
         this.handleButtonClick = this.handleButtonClick.bind(this);
+        this.handleButton2Click = this.handleButton2Click.bind(this);
         this.handleUsernameChange = this.handleUsernameChange.bind(this);
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
     }
@@ -30,6 +35,14 @@ export default class Login extends React.Component {
     }
 
     handleButtonClick(event) {
+        this.setState({ waiting: true });
+       // event.preventDefault();
+    }
+
+    handleButton2Click(event) {
+        console.log(Translate);
+        I18n.setLocale('en');
+        this.forceUpdate();
        // event.preventDefault();
     }
 
@@ -58,10 +71,11 @@ export default class Login extends React.Component {
                         <div className="row">
                             <div className="col-xs-12">
                                 <div className="bx hz32">
+                                    <Translate value="username" />
                                     <CInput
                                         type="text"
                                         name="username"
-                                        placeholder="username"
+                                        placeholder={I18n.t('username')}
                                         value={this.state.username}
                                         onChange={this.handleUsernameChange}
                                         noBorderBot={true}
@@ -69,7 +83,7 @@ export default class Login extends React.Component {
                                     <CInput
                                         type="text"
                                         name="password"
-                                        placeholder="password"
+                                        placeholder={I18n.t('password')}
                                         value={this.state.password}
                                         onChange={this.handlePasswordChange}
                                     />
@@ -79,12 +93,12 @@ export default class Login extends React.Component {
                         <div className="row">
                             <div className="col-xs-12 col-sm-4">
                                 <div className="bx">
-                                    <CButton onClick={this.handleButtonClick} buttontype={true} value="Login" />
+                                    <CButton onClick={this.handleButtonClick} buttontype={true} value={I18n.t('login')} />
                                 </div>
                             </div>
                             <div className="col-xs-12 col-sm-4">
                                 <div className="bx">
-                                    <CButton onClick={this.handleButtonClick} type="clean" value="help" />
+                                    <CButton onClick={this.handleButton2Click} type="clean" value={I18n.t('selectLanguage')} />
                                 </div>
                             </div>
                         </div>

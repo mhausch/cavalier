@@ -3,21 +3,21 @@
         "logger": "CONSOLE",
         "host": "localhost",
         "port": 3000,
-        "jwtsecret": "MONDAYTUESDAYWEDNESDAY",
+        "secret": "MONDAYTUESDAYWEDNESDAY",
         "jwtencryptkey": "SomeKeyMustBe16CharactersOrMore",
-        "rethinkdb": { 
+        "rethinkdb": {
             "db": "test"
         }
     },
 
     "production": {
         "logger": "FILE",
-        "host": "localhost",        
+        "host": "localhost",
         "port": 3000,
-        "jwtsecret": "MONDAYTUESDAYWEDNESDAY",   
-        "jwtencryptkey": "SomeKeyMustBe16CharactersOrMore",           
-        "rethinkdb": { 
+        "secret": "MONDAYTUESDAYWEDNESDAY",
+        "jwtencryptkey": "SomeKeyMustBe16CharactersOrMore",
+        "rethinkdb": {
             "db": "test"
-        }     
+        }
     }
 }

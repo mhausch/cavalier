@@ -1,5 +1,4 @@
 const instanceIO = require('../../server/instance.js');
-const encryptor = require('simple-encryptor')(instanceIO.getJWTEncryptKeyBase64());
 const jwt = require('jsonwebtoken');
 
 
@@ -24,7 +23,7 @@ auth.prototype.verifyToken = function (token, ip) {
         }
 
         // Verify the token
-        jwt.verify(token, instanceIO.getJWTSecretBase64(), (err, payload) => {
+        jwt.verify(token, instanceIO.getSecretBase64(), (err, payload) => {
             if (err) {
                 reject(new Error('Invalid Token!'));
             } else if (payload.ip.type === ip.type && payload.ip.value === ip.value) {

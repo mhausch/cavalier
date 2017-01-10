@@ -4,28 +4,18 @@
  * =========================================================================== *
  */
 const instanceIO = require('./src/server/instance.js');
-
-instanceIO.start();
-
-// Get Routes
 const appRouter = require('./src/server/routes/app.js');
 const apiRouter = require('./src/server/routes/api.js');
 
-
-
 /*
  * =========================================================================== *
- * constants                                                                   *
+ * Run Setup                                                                   *
  * =========================================================================== *
  */
-const API_PATH = '/api/';
-const APP = '/';
+// start setup instance
+instanceIO.start();
 
-/*
- * =========================================================================== *
- * Get Frame from instance                                                     *
- * =========================================================================== *
- */
+// Getting the instance
 const expressApp = instanceIO.getExpress();
 const socketIO = instanceIO.getSocketIO();
 
@@ -34,46 +24,19 @@ const socketIO = instanceIO.getSocketIO();
  * Routes - order matters!                                                     *
  * =========================================================================== *
  */
-// Use Routers
-// 1. API
-// 2. Public
-// 3. Private
+// Get Routes
+const API_PATH = '/api/';
+const APP = '/';
+
 expressApp.use(API_PATH, apiRouter);
-// expressApp.use(PUBLIC_PATH, publicRouter);
-// expressApp.use(PRIVATE_PATH, privateRouter);
-// const path = require('path');
-// // last fallback catch-route
 expressApp.use(APP, appRouter);
 
-// expressApp.use('/*', (req, res, next) => {
-//     if (req.body && req.body.username) {
-//         res.sendFile(path.resolve('src', 'client', 'entrys', 'private', 'index.html'));
-//     } else {
-//         next();
-//     }
-// });
-
-// expressApp.get('/', (req, res) => {
-//     res.redirect('login');
-// });
-
-// expressApp.get('/login', (req, res) => {
-//     res.sendFile(path.resolve('src', 'client', 'entrys', 'public', 'index.html'));
-// });
-
-// expressApp.post('/login', (req, res) => {
-//     if (req.body && req.body.username) {
-//         res.sendFile(path.resolve('src', 'client', 'entrys', 'private', 'index.html'));
-//     } else {
-//         res.redirect('login');
-//     }
-// });
 /*
  * =========================================================================== *
- * Authentification                                                            *
+ * Server listen                                                               *
  * =========================================================================== *
  */
-
+// Server listen
 instanceIO.listen();
 // socketIO.use(socketioJwt.authorize({
 //     secret: instanceIO.getJWTSecretBase64(),

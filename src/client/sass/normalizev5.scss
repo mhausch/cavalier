@@ -270,6 +270,10 @@ input { /* 1 */
   overflow: visible;
 }
 
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px white inset !important;
+}
+
 /**
  * Remove the inheritance of text transform in Edge, Firefox, and IE.
  * 1. Remove the inheritance of text transform in Firefox.

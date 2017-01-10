@@ -67,7 +67,7 @@ apiRouter.post('/login', (req, res, next) => {
         user.ip = new RequestIP(req).getIP();
 
         // expire 60 seconds * 60 (one hour)
-        let jwtToken = jwt.sign(user, instanceIO.getJWTSecretBase64(), { expiresIn: 60 * 60 });
+        let jwtToken = jwt.sign(user, instanceIO.getSecretBase64(), { expiresIn: 60 * 60 });
 
         // Encrypt the whole token!
         // jwtToken = encryptor.encrypt(jwtToken);

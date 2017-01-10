@@ -8,7 +8,6 @@ const http = require('http');
 const socketIo = require('socket.io');
 const helmet = require('helmet');
 const session = require('express-session');
-const RedisStore = require('connect-redis')(session);
 const cookieParser = require('cookie-parser');
 
 const webpack = require('webpack');
@@ -49,8 +48,8 @@ inst.start = function () {
  * return bas64 jwt secret
  * @public
  */
-inst.getJWTSecretBase64 = function () {
-    const buffer = new Buffer(this._config.jwtsecret);
+inst.getSecretBase64 = function () {
+    const buffer = new Buffer(this._config.secret);
     return buffer.toString('base64');
 };
 
@@ -127,12 +126,13 @@ inst._setup = function () {
     // Parsers
     this._express.use(bodyParser.urlencoded({ extended: true }));
     this._express.use(bodyParser.json());
-    this._express.use(cookieParser('shhhh, very secret'));
+    this._express.use(cookieParser(self.getSecretBase64()));
 
     this._express.use(session({
-        secret: 'keyboard cat',
+        secret: self.getSecretBase64(),
         resave: false,
         saveUninitialized: true,
+        cookie: { maxAge: 60000 },
     }));
 };
 

@@ -4,14 +4,11 @@
  * =========================================================================== *
  */
 const instanceIO = require('./src/server/instance.js');
-const socketioJwt = require('socketio-jwt');
 
 instanceIO.start();
 
 // Get Routes
-const indexRouter = require('./src/server/routes/index.js');
-const publicRouter = require('./src/server/routes/public.js');
-const privateRouter = require('./src/server/routes/private.js');
+const appRouter = require('./src/server/routes/app.js');
 const apiRouter = require('./src/server/routes/api.js');
 
 
@@ -21,10 +18,8 @@ const apiRouter = require('./src/server/routes/api.js');
  * constants                                                                   *
  * =========================================================================== *
  */
-const API_PATH = '/cavalier/api/';
-const PUBLIC_PATH = '/cavalier/public';
-const PRIVATE_PATH = '/cavalier/private';
-const INDEX = '/*';
+const API_PATH = '/api/';
+const APP = '/';
 
 /*
  * =========================================================================== *
@@ -41,14 +36,38 @@ const socketIO = instanceIO.getSocketIO();
  */
 // Use Routers
 // 1. API
-// 2. Public 
+// 2. Public
 // 3. Private
 expressApp.use(API_PATH, apiRouter);
-expressApp.use(PUBLIC_PATH, publicRouter);
-expressApp.use(PRIVATE_PATH, privateRouter);
+// expressApp.use(PUBLIC_PATH, publicRouter);
+// expressApp.use(PRIVATE_PATH, privateRouter);
+// const path = require('path');
+// // last fallback catch-route
+expressApp.use(APP, appRouter);
 
-// last fallback catch-route
-expressApp.use(INDEX, indexRouter);
+// expressApp.use('/*', (req, res, next) => {
+//     if (req.body && req.body.username) {
+//         res.sendFile(path.resolve('src', 'client', 'entrys', 'private', 'index.html'));
+//     } else {
+//         next();
+//     }
+// });
+
+// expressApp.get('/', (req, res) => {
+//     res.redirect('login');
+// });
+
+// expressApp.get('/login', (req, res) => {
+//     res.sendFile(path.resolve('src', 'client', 'entrys', 'public', 'index.html'));
+// });
+
+// expressApp.post('/login', (req, res) => {
+//     if (req.body && req.body.username) {
+//         res.sendFile(path.resolve('src', 'client', 'entrys', 'private', 'index.html'));
+//     } else {
+//         res.redirect('login');
+//     }
+// });
 /*
  * =========================================================================== *
  * Authentification                                                            *
@@ -98,11 +117,11 @@ io.on('connection', socket => {
 //       from: socket.id.slice(12)
 //     })
 //   })
-  
+
 
 //   socket.on('stock_insert', (stock =>{
 //     r.connect({db:'test'}, (err, conn) => {
-//         r.db('test').table('stock_data').insert({stockName: stock.name, stockExchange: stock.exchange, date: new Date(), price: stock.price }).run(conn);    
+//         r.db('test').table('stock_data').insert({stockName: stock.name, stockExchange: stock.exchange, date: new Date(), price: stock.price }).run(conn);
 //     })
 //   }))
 
@@ -115,7 +134,7 @@ io.on('connection', socket => {
 //         cursor.each(function(err, result) {
 //             if (err) throw err;
 //             socket.emit('stats', result);
-//         });        
+//         });
 //     })
 
 //   });

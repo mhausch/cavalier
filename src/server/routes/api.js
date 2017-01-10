@@ -10,7 +10,6 @@ const instanceIO = require('../../server/instance.js');
 const router = require('express').Router();
 const RequestIP = require('./../utils/requestip');
 const jwt = require('jsonwebtoken');
-const encryptor = require('simple-encryptor')(instanceIO.getJWTEncryptKeyBase64());
 
 /*
  * App Modules

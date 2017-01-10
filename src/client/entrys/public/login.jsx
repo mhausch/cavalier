@@ -15,23 +15,22 @@ export default class Login extends React.Component {
             waiting: false,
         };
 
-        // get access_token
-        const token = window.localStorage.getItem('cav_token');
-
-        if (token) {
-            // fetch.launch(token, (response) => {
-            //     console.log(response);
-            // });
-           // window.location.href = '/?access_token=' + encodeURI(token);
-           window.location.href = '/cavalier/private/?cav_token=' + encodeURI(token);
-        } else {
-
-        }
-
         // method binding
         this.handleButtonClick = this.handleButtonClick.bind(this);
         this.handleUsernameChange = this.handleUsernameChange.bind(this);
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
+    }
+
+    handlePasswordChange(event) {
+        this.setState({ password: event.target.value });
+    }
+
+    handleUsernameChange(event) {
+        this.setState({ username: event.target.value });
+    }
+
+    handleButtonClick(event) {
+       // event.preventDefault();
     }
 
     getContent() {
@@ -55,80 +54,44 @@ export default class Login extends React.Component {
         return (<div className="container">
             <div className="row center-md">
                 <div className="col-xs-12 col-sm-8 col-lg-3">
-                    <div className="row">
-                        <div className="col-xs-12">
-                            <div className="bx hz32">
-                                <CInput
-                                    type="text"
-                                    name="username"
-                                    placeholder="username"
-                                    value={this.state.username}
-                                    onChange={this.handleUsernameChange}
-                                    noBorderBot={true}
-                                />
-                                <CInput
-                                    type="text"
-                                    name="password"
-                                    placeholder="password"
-                                    value={this.state.password}
-                                    onChange={this.handlePasswordChange}
-                                />
+                    <form method="post" action="/login">
+                        <div className="row">
+                            <div className="col-xs-12">
+                                <div className="bx hz32">
+                                    <CInput
+                                        type="text"
+                                        name="username"
+                                        placeholder="username"
+                                        value={this.state.username}
+                                        onChange={this.handleUsernameChange}
+                                        noBorderBot={true}
+                                    />
+                                    <CInput
+                                        type="text"
+                                        name="password"
+                                        placeholder="password"
+                                        value={this.state.password}
+                                        onChange={this.handlePasswordChange}
+                                    />
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-xs-12 col-sm-4">
-                            <div className="bx">
-                                <CButton onClick={this.handleButtonClick} value="Login" />
+                        <div className="row">
+                            <div className="col-xs-12 col-sm-4">
+                                <div className="bx">
+                                    <CButton onClick={this.handleButtonClick} buttontype={true} value="Login" />
+                                </div>
+                            </div>
+                            <div className="col-xs-12 col-sm-4">
+                                <div className="bx">
+                                    <CButton onClick={this.handleButtonClick} type="clean" value="help" />
+                                </div>
                             </div>
                         </div>
-                        <div className="col-xs-12 col-sm-4">
-                            <div className="bx">
-                                <CButton onClick={this.handleButtonClick} type="clean" value="help" />
-                            </div>
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>);
-    }
-
-    handlePasswordChange(event) {
-        this.setState({ password: event.target.value });
-    }
-
-    handleUsernameChange(event) {
-        this.setState({ username: event.target.value });
-    }
-
-    handleButtonClick(event) {
-        // show spinner
-        this.setState({ waiting: true });
-
-        // login
-        fetch.login(this.state.username, this.state.password, (response) => {
-            if (response && response.data && response.data.token) {
-                // save storage for the future
-                window.localStorage.setItem('cav_token', response.data.token);
-                //fetch.launch(response.data.token, (response) => {
-                  //  console.log(response);
-                //});
-
-                window.location.href = '/cavalier/private/?cav_token=' + encodeURI(response.data.token);
-
-                // let req = new XMLHttpRequest();
-                // req.open('GET', '/cavalier/private', true);
-                // req.setRequestHeader('Authorization', 'JWT ' + response.data.token);
-
-                // req.send(null);
-
-                this.setState({ waiting: false });
-            } else {
-                // delete cache
-                window.localStorage.removeItem('access_token');
-            }
-        });
-       // event.preventDefault();
     }
 
     render() {

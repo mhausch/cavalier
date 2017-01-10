@@ -31,7 +31,7 @@ export default class CButton extends React.Component {
 
     getComponent() {
         if (this.props.buttontype) {
-            return (<button>{this.props.value}</button>);
+            return (<button className={this.getClassName()} onClick={this.props.onClick}>{this.props.value}</button>);
         }
 
         return (<input type="button" className={this.getClassName()} value={this.props.value} onClick={this.props.onClick} />);

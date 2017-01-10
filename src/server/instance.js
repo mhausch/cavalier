@@ -7,16 +7,13 @@ const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 const helmet = require('helmet');
-
-const passport = require('passport');
-const passportJWT = require('passport-jwt');
+const session = require('express-session');
+const RedisStore = require('connect-redis')(session);
+const cookieParser = require('cookie-parser');
 
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackConfig = require('../../webpack.config.js');
-
-const ExtractJWT = passportJWT.ExtractJwt;
-const JWTStrategy = passportJWT.Strategy;
 
 // Export
 const inst = exports = module.exports = {};
@@ -44,8 +41,8 @@ inst.start = function () {
     // Connect to rethink
     this._db = this._connectDatabase();
 
-    // Start http (express) Server
-    this._startServer();
+    // setup http (express) Server
+    this._setup();
 };
 
 /**
@@ -110,12 +107,15 @@ inst.getSocketIO = function () {
  * Return loaded Config
  * @private
  */
-inst._startServer = function () {
+inst._setup = function () {
     const self = this;
 
     // express instance
     this._express = express();
-    
+
+    // some security
+    this._express.use(helmet());
+
     // create http on express
     this._httpServer = http.createServer(this._express);
 
@@ -124,34 +124,16 @@ inst._startServer = function () {
 
     this._express.use(webpackDevMiddleware(webpack(webpackConfig)));
 
-    // Authentification via passport
-    const jwtOption = {
-        jwtFromRequest: ExtractJWT.fromUrlQueryParameter('cav_token'),
-        secretOrKey: self.getJWTSecretBase64(),
-    };
-    const strategy = new JWTStrategy(jwtOption, (payload, next) => {
-        console.log(payload);
-        next(null, payload);
-    });
-
-    passport.use(strategy);
-    this._express.use(passport.initialize());
-
-    // some security
-    this._express.use(helmet());
-
     // Parsers
     this._express.use(bodyParser.urlencoded({ extended: true }));
     this._express.use(bodyParser.json());
+    this._express.use(cookieParser('shhhh, very secret'));
 
-    this._socketIO.on('connection', (socket) => {
-        console.log(socket);
-
-        socket.on('message', (gg) => {
-            console.log('socket');
-        });
-
-    });
+    this._express.use(session({
+        secret: 'keyboard cat',
+        resave: false,
+        saveUninitialized: true,
+    }));
 };
 
 inst.listen = function () {
@@ -220,7 +202,7 @@ inst._loadConfig = function () {
         cfglogger.log('info', 'Config loaded!');
     } catch (err) {
         // log the errors
-        cfglogger.log('error', 'Failed to load config, crushing app...');      
+        cfglogger.log('error', 'Failed to load config, crushing app...');
         cfglogger.log('error', err);
 
         // stop loading

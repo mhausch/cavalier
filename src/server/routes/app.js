@@ -39,6 +39,13 @@ appRouter.get('/client', (req, res) => {
     }
 });
 
+appRouter.get('/logout', (req, res) => {
+    req.session.destroy(() => {
+        req.session = null;
+        res.redirect('*');
+    });
+});
+
 // catch all
 appRouter.get('*', (req, res) => {
     res.redirect('/login');

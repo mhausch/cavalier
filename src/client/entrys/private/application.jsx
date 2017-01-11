@@ -14,11 +14,13 @@ export default class Application extends React.Component {
     }
 
     handlecl() {
-        this.socket.emit('message', 'gg');
+       // this.socket.emit('message', 'gg');
     }
 
     render() {
-        return <div className="blue"><input type="button" onClick={this.handlecl.bind(this)} />Application</div>;
+        return (<form method="get" action="/logout">
+            <div className="blue"><button onClick={this.handlecl.bind(this)} />Application</div>;
+        </form>);
     }
 }
 

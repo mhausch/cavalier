@@ -1,15 +1,16 @@
+// Import Modules
 import React, { PropTypes } from 'react';
-import { Translate, I18n } from 'react-redux-i18n';
-import { loadTranslations, setLocale, syncTranslationWithStore, i18nReducer } from 'react-redux-i18n';
+import { setLocale, I18n } from 'react-redux-i18n';
+import { connect } from 'react-redux';
 
-
+// Custom Imports
 import CButton from '../../components/button/button';
 import CInput from '../../components/input/input';
 
-
+// Sass integration
 require('./../../sass/login.scss');
 
-export default class Login extends React.Component {
+class Login extends React.Component {
     constructor(props) {
         super(props);
 
@@ -20,8 +21,8 @@ export default class Login extends React.Component {
         };
 
         // method binding
-        this.handleButtonClick = this.handleButtonClick.bind(this);
-        this.handleButton2Click = this.handleButton2Click.bind(this);
+        this.handleLoginClick = this.handleLoginClick.bind(this);
+        this.handleLanguClick = this.handleLanguClick.bind(this);
         this.handleUsernameChange = this.handleUsernameChange.bind(this);
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
     }
@@ -34,16 +35,22 @@ export default class Login extends React.Component {
         this.setState({ username: event.target.value });
     }
 
-    handleButtonClick(event) {
+    handleLoginClick(event) {
+        // Show spinner
         this.setState({ waiting: true });
-       // event.preventDefault();
     }
 
-    handleButton2Click(event) {
-        console.log(Translate);
-        I18n.setLocale('en');
+    handleLanguClick(event) {
+        // When locale EN, switch to DE else to EN
+        const locale = I18n._getLocale() === 'en' ? 'de' : 'en';
+
+        window.localStorage.setItem('cavalier_langu', locale);
+
+        // Refresh store
+        this.props.dispatch(setLocale(locale));
+
+        // Refresh placeholders
         this.forceUpdate();
-       // event.preventDefault();
     }
 
     getContent() {
@@ -71,7 +78,6 @@ export default class Login extends React.Component {
                         <div className="row">
                             <div className="col-xs-12">
                                 <div className="bx hz32">
-                                    <Translate value="username" />
                                     <CInput
                                         type="text"
                                         name="username"
@@ -93,12 +99,12 @@ export default class Login extends React.Component {
                         <div className="row">
                             <div className="col-xs-12 col-sm-4">
                                 <div className="bx">
-                                    <CButton onClick={this.handleButtonClick} buttontype={true} value={I18n.t('login')} />
+                                    <CButton onClick={this.handleLoginClick} buttontype={true} value={I18n.t('login')} />
                                 </div>
                             </div>
                             <div className="col-xs-12 col-sm-4">
                                 <div className="bx">
-                                    <CButton onClick={this.handleButton2Click} type="clean" value={I18n.t('selectLanguage')} />
+                                    <CButton onClick={this.handleLanguClick} type="clean" value={I18n.t('selectLanguage')} />
                                 </div>
                             </div>
                         </div>
@@ -113,6 +119,5 @@ export default class Login extends React.Component {
     }
 }
 
-Login.propTypes = {
-    hello: PropTypes.string,
-};
+// Connect Redux to Component
+export default connect()(Login);

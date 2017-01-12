@@ -4,8 +4,8 @@
  * =========================================================================== *
  */
 const instanceIO = require('./src/server/instance.js');
-const appRouter = require('./src/server/routes/app.js');
-const apiRouter = require('./src/server/routes/api.js');
+// const appRouter = require('./src/server/routes/app.js');
+// const apiRouter = require('./src/server/routes/api.js');
 
 /*
  * =========================================================================== *
@@ -15,15 +15,19 @@ const apiRouter = require('./src/server/routes/api.js');
 // start setup instance
 instanceIO.start();
 
-// Getting the instance
+// get Instance
 const expressApp = instanceIO.getExpress();
 const socketIO = instanceIO.getSocketIO();
 
+
 /*
  * =========================================================================== *
- * Routes - order matters!                                                     *
+ * Routes - order matters! Require after Setup loaded                          *
  * =========================================================================== *
  */
+const appRouter = require('./src/server/routes/app.js');
+const apiRouter = require('./src/server/routes/api.js');
+
 // Get Routes
 const API_PATH = '/api/';
 const APP = '/';

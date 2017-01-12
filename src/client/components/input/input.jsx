@@ -28,6 +28,7 @@ export default class CInput extends React.Component {
             placeholder={this.props.placeholder}
             value={this.props.value}
             onChange={this.props.onChange}
+            onFocus={this.props.onFocus}
             name={this.props.name}
         />);
     }

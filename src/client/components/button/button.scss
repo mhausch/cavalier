@@ -79,7 +79,7 @@ $border_radius: 3px;
 }
 
 .button.clean:hover {
-    transition: all 0.6s ease-in-out 0s;
+    transition: all 0.4s ease-in-out 0s;
     background-color: darken( $type_clean_color, 5%);
     border-color: darken( $type_clean_color, 5%);
 }
@@ -91,7 +91,7 @@ $border_radius: 3px;
 }
 
 .button.danger:hover {
-    transition: all 0.6s ease-in-out 0s;
+    transition: all 0.4s ease-in-out 0s;
     background-color: darken( $type_danger_color, 5%);
     border-color: darken( $type_danger_color, 5%);
 }
@@ -103,7 +103,7 @@ $border_radius: 3px;
 }
 
 .button.default:hover {
-    transition: all 0.6s ease-in-out 0s;
+    transition: all 0.4s ease-in-out 0s;
     background-color: darken( $type_default_color, 10%);
     border-color: darken( $type_default_color, 10%);
 }

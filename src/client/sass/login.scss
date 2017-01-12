@@ -1,3 +1,7 @@
+@font-face{
+    font-family: 'Abel';
+    src: url('Abel-Regular.ttf') format('truetype');
+}
 @import './normalizev5';
 
 html {
@@ -15,4 +19,9 @@ body {
 @import './respgrid';
 
 @import './spinkit';
+
+
+label {
+    font-family: 'Abel';
+}
 

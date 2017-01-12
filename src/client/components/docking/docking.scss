@@ -1,0 +1,44 @@
+.docking {
+	position:fixed;
+	display:block;
+	opacity:0;
+	visibility: hidden;
+	width:100%;
+	z-index:999999;
+	color:#fff;
+	font-size:17px;
+	background:#fff;
+	height:55px;
+	line-height:55px;
+	text-align:center;
+	transition:opacity 0.3s, margin-top 0.3s;
+}
+
+.docking.show {
+   	opacity: 1;
+	visibility: visible;
+}
+
+.docking.left {
+    left: 0;
+}
+
+.docking.right {
+    right: 0;
+}
+
+.docking.top {
+    top: 0;
+}
+
+.docking.bottom {
+    bottom: 0;
+}
+
+.dockingClose {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 20px;
+    cursor: pointer;
+}

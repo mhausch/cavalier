@@ -8,9 +8,7 @@ export default class Application extends React.Component {
     }
 
     componentDidMount() {
-        this.socket = io.connect('/');
-        this.socket.emit('message', '');
-        console.log(this.socket.name);
+        this.socket = io('/', { path: '/client' });
     }
 
     handlecl() {

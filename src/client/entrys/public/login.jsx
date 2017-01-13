@@ -71,6 +71,7 @@ class Login extends React.Component {
                     this.setState({ error: true });
                     this.setState({ errorMsg: I18n.t('invalidCredentials') });
                 }
+                this.setState({ docking: true });
             }
         };
         httpRequest.open('POST', '/api/login', false);
@@ -126,9 +127,11 @@ class Login extends React.Component {
         }
 
         return (<div className="container">
-            <CDocking open={this.state.docking} clickClose={this.cli.bind(this)} />
+            <CDocking open={this.state.docking} clickClose={this.cli.bind(this)} >
+                {this.getError()}
+            </CDocking>
             <div className="row center-md">
-                <div className="col-xs-12 col-sm-8 col-lg-3">
+                <div className="col-xs-12 col-sm-4 col-lg-3">
                     <form method="post" action="/login">
                         <div className="row">
                             <div className="col-xs-12">
@@ -165,7 +168,6 @@ class Login extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        {this.getError()}
                     </form>
                 </div>
             </div>

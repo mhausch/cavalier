@@ -119,7 +119,7 @@ inst._setup = function () {
     this._httpServer = http.createServer(this._express);
 
     // socket io
-    this._socketIO = socketIo(this._httpServer);
+    this._socketIO = socketIo(this._httpServer, { path: '/client' });
 
     this._express.use(webpackDevMiddleware(webpack(webpackConfig)));
 
@@ -136,11 +136,22 @@ inst._setup = function () {
     }));
 };
 
+/**
+ * Start server on Port xxxx
+ * @public
+ */
 inst.listen = function () {
     const self = this;
-    // server listen
-    this._express.listen(3000, () => {
-        self._initLogger.log('info', 'Server listen on port 3000');
+
+    // evaluate Promise
+    self._db.then(() => {
+        // Promise resolved, server can start now
+        self._httpServer.listen(self._config.port, self._config.host, () => {
+            self._initLogger.log('info', 'Server listen on host %s port %s', self._config.host, self._config.port);
+        });
+    }, (err) => {
+        // error
+        self._initLogger.log('error', err);
     });
 };
 

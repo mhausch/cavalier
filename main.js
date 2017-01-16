@@ -40,9 +40,12 @@ expressApp.use(APP, appRouter);
  * Socket functions                                                            *
  * =========================================================================== *
  */
-const socketFunctions = require('./src/server/socket/funcs.js');
+// const socketFunctions = require('./src/server/socket/funcs.js');
+const Socket = require('./src/server/units/socket');
 
-socketFunctions.attach(socketIO);
+const sock = new Socket(socketIO);
+
+// socketFunctions.attach(socketIO);
 
 /*
  * =========================================================================== *

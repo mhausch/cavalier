@@ -130,8 +130,8 @@ class Login extends React.Component {
             <CDocking open={this.state.docking} clickClose={this.cli.bind(this)} >
                 {this.getError()}
             </CDocking>
-            <div className="row center-md">
-                <div className="col-xs-12 col-sm-4 col-lg-3">
+            <div className="row center-xs">
+                <div className="col-xs-10 col-sm-4 col-lg-3">
                     <form method="post" action="/login">
                         <div className="row">
                             <div className="col-xs-12">

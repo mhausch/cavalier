@@ -9,10 +9,13 @@ const socketIo = require('socket.io');
 const helmet = require('helmet');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const passport = require('passport');
+const Strategy = require('passport-local').Strategy;
 
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackConfig = require('../../webpack.config.js');
+const Store = require('./units/sessions.js')(session);
 
 // Export
 const inst = exports = module.exports = {};
@@ -133,7 +136,27 @@ inst._setup = function () {
         resave: false,
         saveUninitialized: true,
         cookie: { maxAge: 60000 },
+        store: new Store({}, this._db, this._logger),
     }));
+
+    passport.use(new Strategy({session: true}, (username, password, done) => {
+            if (password) {
+                done(null, username);
+            } else {
+                done(null, false);
+            }
+    }));
+
+    passport.serializeUser((user, done) => {
+        done(null, user);
+    });
+
+    passport.deserializeUser((id, done) => {
+        done(null, id);
+    });
+
+    this._express.use(passport.initialize());
+    this._express.use(passport.session());
 };
 
 /**
@@ -143,15 +166,19 @@ inst._setup = function () {
 inst.listen = function () {
     const self = this;
 
-    // evaluate Promise
-    self._db.then(() => {
-        // Promise resolved, server can start now
-        self._httpServer.listen(self._config.port, self._config.host, () => {
-            self._initLogger.log('info', 'Server listen on host %s port %s', self._config.host, self._config.port);
-        });
-    }, (err) => {
-        // error
-        self._initLogger.log('error', err);
+    // // evaluate Promise
+    // self._db.then(() => {
+    //     // Promise resolved, server can start now
+    //     self._httpServer.listen(self._config.port, self._config.host, () => {
+    //         self._initLogger.log('info', 'Server listen on host %s port %s', self._config.host, self._config.port);
+    //     });
+    // }, (err) => {
+    //     // error
+    //     self._initLogger.log('error', err);
+    // });
+
+    self._httpServer.listen(self._config.port, self._config.host, () => {
+        self._initLogger.log('info', 'Server listen on host %s port %s', self._config.host, self._config.port);
     });
 };
 
@@ -161,17 +188,28 @@ inst.listen = function () {
  */
 inst._connectDatabase = function () {
     const self = this;
+    let connection = {};
+    // return r.connect({
+    //     db: self._config.rethinkdb.db,
+    // }, function (err, conn) {
+    //     if (err) {
+    //         self._initLogger.log('error', err);
+    //         throw new Error();
+    //     }
 
-    return r.connect({
-        db: self._config.rethinkdb.db,
-    }, function (err, conn) {
-        if (err) {
-            self._initLogger.log('error', err);
-            throw new Error();
-        }
+    //     self._initLogger.log('info', 'Database [%s] connected!', self._config.rethinkdb.db);
+    // });
 
-        self._initLogger.log('info', 'Database [%s] connected!', self._config.rethinkdb.db);
+    r.connect({ host: 'localhost', port: 28015, db: 'test' }, function(err, conn) {
+        connection = conn;
+
+        r.tableCreate('sessions').run(conn).then(function(result) {
+            console.log(result);
+        }).catch((error) => { console.log(error) });
+        return connection;
     });
+
+    // return connection;
 };
 
 /**

@@ -6,7 +6,13 @@
         "secret": "MONDAYTUESDAYWEDNESDAY",
         "jwtencryptkey": "SomeKeyMustBe16CharactersOrMore",
         "rethinkdb": {
-            "db": "test"
+            "db": "test",
+            "host": "localhost",
+            "port": 28015,
+            "user": "admin",
+            "password": "",
+            "timeout": 20,
+            "ssl": null
         }
     },
 
@@ -17,7 +23,13 @@
         "secret": "MONDAYTUESDAYWEDNESDAY",
         "jwtencryptkey": "SomeKeyMustBe16CharactersOrMore",
         "rethinkdb": {
-            "db": "test"
+            "db": "test",
+            "host": "localhost",
+            "port": 28015,
+            "user": "admin",
+            "password": "",
+            "timeout": 20,
+            "ssl": null
         }
     }
 }

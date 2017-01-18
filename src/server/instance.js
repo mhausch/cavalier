@@ -40,9 +40,6 @@ inst.start = function () {
     this._config = this._loadConfig();
     this._logger = this._getLogger();
 
-    // Connect to rethink
-    this._db = this._connectDatabase();
-
     // setup http (express) Server
     this._setup();
 };
@@ -139,7 +136,7 @@ inst._setup = function () {
         store: new Store({}, this._db, this._logger),
     }));
 
-    passport.use(new Strategy({session: true}, (username, password, done) => {
+    passport.use(new Strategy({ session: true }, (username, password, done) => {
             if (password) {
                 done(null, username);
             } else {
@@ -166,50 +163,17 @@ inst._setup = function () {
 inst.listen = function () {
     const self = this;
 
-    // // evaluate Promise
-    // self._db.then(() => {
-    //     // Promise resolved, server can start now
-    //     self._httpServer.listen(self._config.port, self._config.host, () => {
-    //         self._initLogger.log('info', 'Server listen on host %s port %s', self._config.host, self._config.port);
-    //     });
-    // }, (err) => {
-    //     // error
-    //     self._initLogger.log('error', err);
-    // });
-
     self._httpServer.listen(self._config.port, self._config.host, () => {
         self._initLogger.log('info', 'Server listen on host %s port %s', self._config.host, self._config.port);
     });
 };
 
 /**
- * Return DB
+ * Return RethinkDB config
  * @private
  */
-inst._connectDatabase = function () {
-    const self = this;
-    let connection = {};
-    // return r.connect({
-    //     db: self._config.rethinkdb.db,
-    // }, function (err, conn) {
-    //     if (err) {
-    //         self._initLogger.log('error', err);
-    //         throw new Error();
-    //     }
-
-    //     self._initLogger.log('info', 'Database [%s] connected!', self._config.rethinkdb.db);
-    // });
-
-    r.connect({ host: 'localhost', port: 28015, db: 'test' }, function(err, conn) {
-        connection = conn;
-
-        r.tableCreate('sessions').run(conn).then(function(result) {
-            console.log(result);
-        }).catch((error) => { console.log(error) });
-        return connection;
-    });
-
-    // return connection;
+inst.getRethinkConfig = function () {
+    return this._config.db;
 };
 
 /**

@@ -41,7 +41,7 @@ expressApp.use(APP, appRouter);
  * =========================================================================== *
  */
 // const socketFunctions = require('./src/server/socket/funcs.js');
-const Socket = require('./src/server/units/socket');
+const Socket = require('./src/server/layers/socket');
 
 const sock = new Socket(socketIO);
 

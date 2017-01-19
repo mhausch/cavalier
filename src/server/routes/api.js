@@ -14,8 +14,7 @@ const jwt = require('jsonwebtoken');
 /*
  * App Modules
  */
-const userUnit = require('../../server/units/users.js');
-const AuthUnit = require('../../server/units/auth.js');
+const User = require('../../server/layers/objects/user.js');
 
 /*
  * =========================================================================== *
@@ -56,52 +55,97 @@ apiRouter.post('/login', (req, res, next) => {
         return;
     }
 
-    // Asking user unit for user credentials
-    userUnit.checkCredentials(req.body.username, req.body.password).then((response) => {
-        const user = response;
+    // Create user object
+    const user = new User({ username: req.body.username });
 
-        // Delete password for safety reasons
-        delete user.password;
+    // initialize (from DB or fictive)
+    user.initialize()
+    .then(() => {
+        if (!user.isPersistent()) {
+            res.status(401).send('Unknown User or Password');
+            return;
+        }
 
-        // save request ip and address src to payload
-        user.ip = new RequestIP(req).getIP();
+        // Check password
+        user.checkPassword(req.body.password)
+        .then((response) => {
+            if (!response) {
+                res.status(401).send('Unknown User or Password');
+            } else {
+                const responseUser = {};
 
-        // expire 60 seconds * 60 (one hour)
-        let jwtToken = jwt.sign(user, instanceIO.getSecretBase64(), { expiresIn: 60 * 60 });
+                // Delete password for safety reasons
+                delete user.password;
 
-        // Encrypt the whole token!
-        // jwtToken = encryptor.encrypt(jwtToken);
+                // save request ip and address src to payload
+                responseUser.ip = new RequestIP(req).getIP();
+                responseUser.username = user.getUsername();
 
-        // send back
-        res.json({ token: jwtToken });
+                // expire 60 seconds * 60 (one hour)
+                const jwtToken = jwt.sign(responseUser, instanceIO.getSecretBase64(), { expiresIn: 60 * 60 });
 
-        // end
-        res.end('');
-    }, (err) => {
-        res.status(401).send(err.message);
+                // // Encrypt the whole token!
+                // // jwtToken = encryptor.encrypt(jwtToken);
+
+                // send back
+                res.json({ token: jwtToken });
+
+                // end
+                res.end('');
+            }
+        })
+        .catch(() => {
+            res.status(500).send('Error occured');
+            return;
+        });
+    })
+    .catch(() => {
+        res.status(500).send('Error occured');
     });
 });
 
 /*
  * Create new user
  */
-apiRouter.post('/newuser', (req, res, next) => {
-    // call unit to save user
-    userUnit.add(req.body).then((response) => {
-        // Promise returns
-        res.status(200).send('Inserted User ' + response.username);
-    }, (err) => {
+apiRouter.post('/newuser', (req, res) => {
+    const user = new User(req.body);
+
+    // initialize
+    user.initialize()
+    .then(() => {
+        // user already exists
+        if (user.isPersistent()) {
+            res.status(400).send('Insertion failed, user already exists');
+            return;
+        }
+         // call unit to save user
+        user.save(req.body).then((response) => {
+            if (response) {
+                // Promise returns
+                res.status(200).send(`Inserted User ${user.getUsername()}`);
+            } else {
+                res.status(400).send('Insertion failed');
+            }
+        }, (error) => {
+            error.log();
+            // Send error back
+            res.status(400).send('Insertion failed');
+        });
+    })
+    .catch((error) => {
+        error.log();
         // Send error back
-        res.status(400).send(err.message);
+        res.status(400).send('Insertion failed');
     });
 });
 
 /*
  * Delete User by username
  */
-apiRouter.post('/deleteuser', (req, res, next) => {
+apiRouter.post('/deleteuser', (req, res) => {
+    const users = new Users();
     // call unit to save user
-    userUnit.delete(req.body.username).then((response) => {
+    users.delete(req.body.username).then((response) => {
         if (response) {
             res.status(200).send('User deleted');
         }
@@ -115,9 +159,6 @@ apiRouter.post('/deleteuser', (req, res, next) => {
  * Verify token
  */
 apiRouter.post('/verify', (req, res) => {
-    // Auth unit
-    const auth = new AuthUnit();
-
     // we get the current ip address
     const requestIP = new RequestIP(req).getIP();
 
@@ -129,15 +170,20 @@ apiRouter.post('/verify', (req, res) => {
         res.status(400).send('Payload given, but no property access_token');
         res.end();
     } else {
-        // Verify token
-        auth.verifyToken(req.body.access_token, requestIP).then(() => {
-            // everything is fine
-            res.json({ valid: true });
-            res.end();
-        }, (error) => {
-            // token dont match requirements!
-            res.status(400).send(error.message);
-            res.end();
+        // Verify the token
+        jwt.verify(req.body.access_token, instanceIO.getSecretBase64(), (err, payload) => {
+            if (err) {
+                // token dont match requirements!
+                res.status(400).send(err.message);
+                res.end();
+            } else if (payload.ip.type === requestIP.type && payload.ip.value === requestIP.value) {
+                // everything is fine
+                res.json({ valid: true });
+                res.end();
+            } else {
+                res.status(400).send('Token not valid to this connection!');
+                res.end();
+            }
         });
     }
 });
@@ -147,7 +193,7 @@ apiRouter.post('/verify', (req, res) => {
  * Non Specific GET - Routes                                                   *
  * =========================================================================== *
  */
-apiRouter.get('/*', (req, res, next) => {
+apiRouter.get('/*', (req, res) => {
     res.status(405).send('API is only for POST').end();
 });
 
@@ -156,6 +202,6 @@ apiRouter.get('/*', (req, res, next) => {
  * Non Specific POST - Routes                                                  *
  * =========================================================================== *
  */
-apiRouter.post('/*', (req, res, next) => {
+apiRouter.post('/*', (req, res) => {
     res.status(404).end();
 });

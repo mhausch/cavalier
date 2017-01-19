@@ -2,7 +2,7 @@
 
 const r = require('rethinkdb');
 const instanceIO = require('../../server/instance.js');
-const constants = require('./constants.js');
+const constants = require('./../utils/constants.js');
 
 
 /**
@@ -28,9 +28,9 @@ module.exports = function connectMongo(connect) {
         }
 
         createDatabaseTable() {
-            r.tableCreate(constants.tables.SESSIONS).run(this._db).then(function(result) {
-               console.log(result);
-            }).catch((error) => { console.log(error) });
+            // r.tableCreate(constants.tables.SESSIONS).run(this._db).then(function(result) {
+            //    console.log(result);
+            // }).catch((error) => { console.log(error) });
         }
     }
 

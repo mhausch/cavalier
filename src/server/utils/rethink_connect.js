@@ -2,6 +2,7 @@
 
 const r = require('rethinkdb');
 const instanceIO = require('./../instance.js');
+const exception = require('./exception');
 
 /**
  * RethinkDB Connector
@@ -13,7 +14,6 @@ class RethinkConnect {
      */
     constructor(rethinkConfig) {
         this._config = rethinkConfig || instanceIO.getRethinkConfig();
-        this._logger = instanceIO.getLogger();
     }
 
     /**
@@ -22,21 +22,25 @@ class RethinkConnect {
      * @callback Function receive connection and can run operations
      */
     connect(callback) {
-        const self = this;
         const config = this._config;
-
-        // Connect to r
-        r.connect({ config }, (error, connection) => {
-
-            // Error occured? Log and throw
-            if (error) {
-                self.log('error', 'RethinkDB Connection Error %s', error);
-                throw error;
-            }
-
-            // call the callback with connection
+        const rcon = r.connect({ config });
+        rcon.then((connection) => {
             callback(connection);
+        })
+        .error((err) => {
+            throw new exception.DBConnectionError({ v1: err });
         });
+
+        // // Connect to r
+        // r.connect({ config }, (error, connection) => {
+        //     // Error occured? Log and throw
+        //     if (error) {
+        //         throw new exception.DBConnectionError({ v1: error });
+        //     }
+
+        //     // call the callback with connection
+        //     callback(connection);
+        // });
     }
 }
 

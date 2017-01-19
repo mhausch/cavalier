@@ -15,7 +15,7 @@ const Strategy = require('passport-local').Strategy;
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackConfig = require('../../webpack.config.js');
-const Store = require('./units/sessions.js')(session);
+const Store = require('./layers/sessions.js')(session);
 
 // Export
 const inst = exports = module.exports = {};
@@ -133,7 +133,7 @@ inst._setup = function () {
         resave: false,
         saveUninitialized: true,
         cookie: { maxAge: 60000 },
-        store: new Store({}, this._db, this._logger),
+        // store: new Store({}, this._db, this._logger),
     }));
 
     passport.use(new Strategy({ session: true }, (username, password, done) => {
@@ -245,11 +245,13 @@ inst._getLogger = function () {
                     name: 'info-file',
                     filename: 'filelog-info.log',
                     level: 'silly',
+                    timestamp: true,
                 }),
                 new (winston.transports.File)({
                     name: 'error-file',
                     filename: 'filelog-error.log',
                     level: 'error',
+                    timestamp: true,
                 }),
             ],
         });
@@ -258,7 +260,7 @@ inst._getLogger = function () {
     if (this._config.logger.toUpperCase() === 'CONSOLE') {
         return new winston.Logger({
             transports: [
-                new (winston.transports.Console)(),
+                new (winston.transports.Console)({ timestamp: true }),
             ],
         });
     }

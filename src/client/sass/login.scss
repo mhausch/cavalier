@@ -1,7 +1,18 @@
 @font-face{
     font-family: 'Abel';
-    src: url('Abel-Regular.ttf') format('truetype');
+    src: url('~/assets/Abel-Regular.ttf') format('truetype');
 }
+
+@font-face{
+    font-family: 'Open Sans';
+    src: url('~/assets/OpenSans-Regular.ttf') format('truetype');
+}
+
+@font-face{
+    font-family: 'Ionicons';
+    src: url('~/assets/Ionicons.ttf') format('truetype');
+}
+
 @import './normalizev5';
 
 html {

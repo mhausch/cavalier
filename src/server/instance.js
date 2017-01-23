@@ -123,6 +123,8 @@ inst._setup = function () {
 
     this._express.use(webpackDevMiddleware(webpack(webpackConfig)));
 
+    this._express.use('/assets', express.static(path.join(__dirname, 'assets')));
+
     // Parsers
     this._express.use(bodyParser.urlencoded({ extended: true }));
     this._express.use(bodyParser.json());
@@ -170,10 +172,10 @@ inst.listen = function () {
 
 /**
  * Return RethinkDB config
- * @private
+ * @public
  */
 inst.getRethinkConfig = function () {
-    return this._config.db;
+    return this._config.rethinkdb;
 };
 
 /**

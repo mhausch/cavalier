@@ -15,6 +15,7 @@ const jwt = require('jsonwebtoken');
  * App Modules
  */
 const User = require('../../server/layers/objects/user.js');
+const users = require('../../server/layers/users.js');
 
 /*
  * =========================================================================== *
@@ -108,35 +109,56 @@ apiRouter.post('/login', (req, res, next) => {
  * Create new user
  */
 apiRouter.post('/newuser', (req, res) => {
-    const user = new User(req.body);
+    // users.cryptPassword('1213231').then((result) => {
+    //     console.log(result);
+    //     return users.setTimeout5();
+    // })
+    // .then((result2) => {
+    //     console.log(result2);
+    //     return users.setTimeout2();
+    // })
+    // .then((result1) => {
+    //     console.log(result1);
+    // })
+    // .catch((error) => { console.log(error); });
 
-    // initialize
-    user.initialize()
-    .then(() => {
-        // user already exists
-        if (user.isPersistent()) {
-            res.status(400).send('Insertion failed, user already exists');
-            return;
-        }
-         // call unit to save user
-        user.save(req.body).then((response) => {
-            if (response) {
-                // Promise returns
-                res.status(200).send(`Inserted User ${user.getUsername()}`);
-            } else {
-                res.status(400).send('Insertion failed');
-            }
-        }, (error) => {
-            error.log();
-            // Send error back
-            res.status(400).send('Insertion failed');
+    users.cryptPassword(req.body.password)
+    .then((result) => {
+        const user = users.clean({
+            username: req.body.username,
+            password: result,
+            email: req.body.email,
         });
+
+        console.log(user);
     })
-    .catch((error) => {
-        error.log();
-        // Send error back
-        res.status(400).send('Insertion failed');
+    .catch(() => {
+
     });
+
+
+
+
+    // const user = new User(req.body);
+
+    // // initialize
+    // user.initialize()
+    // .then(() => {
+    //     // user already exists
+    //     if (user.isPersistent()) {
+    //         throw new Error('Insertion failed, user already exists');
+    //     }
+
+    //     return user.save(req.body);
+    // })
+    // .then(() => {
+    //     res.status(200).send(`Inserted User ${user.getUsername()}`);
+    // })
+    // .catch((error) => {
+    //     // error.log();
+    //     // Send error back
+    //     res.status(400).send('Insertion failed');
+    // });
 });
 
 /*

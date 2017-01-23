@@ -9,6 +9,7 @@ const userSchema = require('./../objects/schemas/userSchema.js');
 const RConnect = require('../../../server/utils/rethink_connect.js');
 
 const User = require('./../objects/user.js');
+const exceptions = require('./../../utils/exception');
 
 /**
  * This Class represents Functions around Users Collection
@@ -93,29 +94,45 @@ class Users {
      * @returns {Promise<user, error>} A Promise that returns the user or an error
      */
     getByUsername(username) {
-        // Convert to Uppercase always
-        const tmpUsername = username.toUpperCase();
+        // Database call
+        const getUser = (tempUsername) => {
+            const c = this.rconnect.connect();
+            c.then((connection) => {
+                // return database Promise
+                return r.table(constants.tables.USERS).get(tempUsername).run(connection);
+            })
+            .catch((error) => {});
+        };
 
         // Return Promise
         return new Promise((resolve, reject) => {
-            this.rconnect.connect((connection) => {
-                // promise on the query, calling callback
-                r.table(constants.tables.USERS).get(tmpUsername).run(connection)
-                .then((cursor) => {
-                    connection.close();
-                    // no error and return user
-                    if (cursor) {
-                        resolve(cursor);
-                    } else {
-                        resolve(null);
-                    }
-                })
-                .catch((error) => {
-                    connection.close();
-                    // error occured, we cant pass a user
-                    reject(error);
-                });
+
+            const c = this.rconnect.connect();
+            c.then((connection) => {
+
+                console.log('lalalal');
+                // return database Promise
+                const quer = r.table(constants.tables.USERS).get(username).run(connection);
+                resolve(quer);
+            })
+            .catch((error) => {
+                console.log(error);
             });
+
+           // getUser(username.toUpperCase())
+            // database result
+            // .then((cursor) => {
+            //     // If user exist, return the cursor
+            //     if (cursor) {
+            //         resolve(cursor);
+            //     // nothing found, return null
+            //     } else {
+            //         reject(null);
+            //     }
+            // })
+            // .catch((error) => {
+            //     reject(error);
+            // });
         });
     }
 
@@ -125,39 +142,41 @@ class Users {
      */
     insert(user) {
         return new Promise((resolve, reject) => {
-            const tmpUser = user;
+            // clean up
+            const cleanUpUser = (userInsert, hash) => {
+                const newUser = userInsert;
+                newUser.username = userInsert.username.toUpperCase();
+                newUser.password = hash;
+                return newUser;
+            };
 
-            // conver username Uppercase
-            tmpUser.username = user.username.toUpperCase();
-
-            // encrypt password salt 10
-            bcrypt.hash(user.password, 10)
-            .then((hash) => {
-                // new password is hashed
-                tmpUser.password = hash;
-
-                // establish connection
+            // Insert operation
+            const insert = (userInsert) => {
                 this.rconnect.connect((connection) => {
-                    r.table(constants.tables.USERS).insert(user).run(connection)
-                    // operation callback
-                    .then((cursor) => {
-                        connection.close();
-                        if (cursor.inserted === 1) {
-                            resolve(user);
-                        } else {
-                            reject(new Error('User insertion failed'));
-                        }
-                    })
-                    // db error
-                    .catch((error) => {
-                        connection.close();
-                        reject(error);
-                    });
+                    return r.table(constants.tables.USERS).insert(userInsert).run(connection);
                 });
+            };
+
+            // encipher user password
+            bcrypt.hash(user.password, 10)
+            // Receive the hash
+            .then((hash) => {
+                return insert(cleanUpUser(user, hash));
             })
-            // error at hashing password
+            // Receive the database return code
+            .then((cursor) => {
+
+                // If the db inserted the object, everthing is fine
+                if (cursor.inserted === 1) {
+                    resolve(user);
+                // Error occured
+                } else {
+                    reject(new exceptions.UserInsertionError({ v1: user.username }));
+                }
+            })
+            // error at hash or some other error occured
             .catch((error) => {
-                console.log(error);
+                reject(error);
             });
         });
     }

@@ -19,15 +19,22 @@ const exceptions = {
     // Codes 2xxx
     DBConnectionError: {
         level: 'error',
-        code: 2200,
-        message: 'Failed to conenct Database %s',
+        code: 2100,
+        message: 'Failed to connect database %s',
     },
 
     // Codes 3xxx
+    UserInsertionError: {
+        level: 'error',
+        code: 2201,
+        message: 'Error occured when insert user %s',
+    },
+
+    // Codes 4xxx
     UserNotExistError: {
         level: 'info',
         code: 3001,
-        message: 'The User %s dont exists',
+        message: 'The user %s dont exists',
     },
 
     InvalidCredentialError: {
@@ -174,6 +181,38 @@ class DBConnectionError extends AbstractError {
  * Persistence Layer Errors - Code 3xxx                                        *
  * =========================================================================== *
  */
+class UserInsertionError extends AbstractError {
+    constructor(opts) {
+        super('UserInsertionError');
+
+        // read default properties
+        const excp = exceptions[this.constructor.name];
+
+        // change props
+        this.message = excp.message || opts.message;
+        this.level = excp.level || opts.level;
+        this.v1 = excp.v1 || opts.v1;
+        this.v2 = excp.v2 || opts.v2;
+        this.v3 = excp.v3 || opts.v3;
+        this.v4 = excp.v4 || opts.v4;
+
+        this.message = this.getMessage();
+
+        // code cant be changed
+        this.code = excp.code;
+
+        // stack trace
+        if (typeof Error.captureStackTrace === 'function') {
+            Error.captureStackTrace(this, this.constructor);
+        } else {
+            this.stack = (new Error(this.message)).stack;
+        }
+    }
+
+    getName() {
+        return this.constructor.name;
+    }
+}
 
 /*
  * =========================================================================== *
@@ -250,5 +289,6 @@ module.exports = {
     DBConnectionError,
     InvalidCredentialError,
     NoInitializeCallError,
+    UserInsertionError,
     UserNotExistError,
 };

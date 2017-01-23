@@ -8,25 +8,25 @@ export default class CButton extends React.Component {
     }
 
     getClassName() {
-        let cls = 'button';
+        const cls = [];
+        cls.push('button');
 
 
         if (this.props.type) {
-            cls = cls + ' ' + this.props.type;
+            cls.push(this.props.type);
         } else {
-            cls = cls + ' default';
+            cls.push('default');
         }
 
         if (this.props.size) {
-            cls = cls + ' ' + this.props.size;
+            cls.push(this.props.size);
         }
 
         if (this.props.width) {
-            cls = cls + ' ' + this.props.width;
+            cls.push(this.props.width);
         }
 
-        cls = cls.replace(/\s\s+/g, ' ');
-        return cls;
+        return cls.join(' ').replace(/\s\s+/g, ' ');
     }
 
     getComponent() {

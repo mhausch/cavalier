@@ -13,7 +13,11 @@ class RethinkConnect {
      * @param {object} rethinkConfig - Config to connect to RethinkDB
      */
     constructor(rethinkConfig) {
-        this._config = rethinkConfig || instanceIO.getRethinkConfig();
+        if (instanceIO.getRethinkConfig()) {
+            this._config = instanceIO.getRethinkConfig();
+        } else {
+            this._config = rethinkConfig;
+        }
     }
 
     /**
@@ -21,15 +25,16 @@ class RethinkConnect {
      * !! Dont forget to close connection !!
      * @callback Function receive connection and can run operations
      */
-    connect(callback) {
+    connect() {
         const config = this._config;
         const rcon = r.connect({ config });
-        rcon.then((connection) => {
-            callback(connection);
-        })
-        .error((err) => {
-            throw new exception.DBConnectionError({ v1: err });
-        });
+        return rcon;
+        // rcon.then((connection) => {
+        //     callback(connection);
+        // })
+        // .error((err) => {
+        //     throw new exception.DBConnectionError({ v1: err });
+        // });
 
         // // Connect to r
         // r.connect({ config }, (error, connection) => {

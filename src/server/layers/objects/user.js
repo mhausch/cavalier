@@ -180,43 +180,47 @@ class User {
         return new Promise((resolve, reject) => {
             // check that Instance is initialized
             if (!this.isInitialized()) {
-                reject(new Error('User Instance is not initialized, call initialize()'));
+                reject(new exceptions.NoInitializeCallError({ v1: 'User' }));
             }
 
             Object.keys(this._plain).forEach(key => this._plain[key] === undefined ? delete this._plain[key] : '');
 
-            // Validate against given schema
-            this.validate();
-
-            if (this._isPersistent) {
-                // update to database
-                this._persistence.add(this._plain)
-                // user returns, means everthing is fine
-                .then((user) => {
-                    if (user) {
-                        this._isPersistent = true;
-                        resolve(true);
-                    }
-                })
-                // error occured while saving
-                .catch((error) => {
-                    reject(error);
-                });
-            } else {
-                // save new to database
-                this._persistence.insert(this._plain)
-                // user returns, means everthing is fine
-                .then((user) => {
-                    if (user) {
-                        this._isPersistent = true;
-                        resolve(true);
-                    }
-                })
-                // error occured while saving
-                .catch((error) => {
-                    reject(error);
-                });
+            // Validate the user object
+            try {
+                this.validate();
+            } catch (error) {
+                reject(error);
             }
+
+        if (this._isPersistent) {
+            // update to database
+            this._persistence.add(this._plain)
+            // user returns, means everthing is fine
+            .then((user) => {
+                if (user) {
+                    this._isPersistent = true;
+                    // resolve(true);
+                }
+            })
+            // error occured while saving
+            .catch((error) => {
+                // reject(error);
+            });
+        } else {
+            // save new to database
+            this._persistence.insert(this._plain)
+            // user returns, means everthing is fine
+            .then((user) => {
+                if (user) {
+                    this._isPersistent = true;
+                    // resolve(true);
+                }
+            })
+            // error occured while saving
+            .catch((error) => {
+                // reject(error);
+            });
+        }
         });
     }
 

@@ -5,10 +5,11 @@ module.exports = [
         entry: path.join(__dirname + '/src/client/entrys/public'),
         output: {
             path: '/pub/',
+            publicPath: '/assets/', // Development Server
         },
         devtool: 'source-maps',
         resolve: {
-            extensions: ['', '.js', '.jsx', '.json', '.css', '.scss'],
+            extensions: ['', '.js', '.jsx', '.json', '.css', '.scss', 'ttf'],
         },
         module: {
             loaders: [

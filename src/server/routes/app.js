@@ -53,6 +53,11 @@ appRouter.get('/logout', (req, res) => {
 });
 
 // catch all
+appRouter.get('/assets', (req, res) => {
+    res.end();
+});
+
+// catch all
 appRouter.get('*', (req, res) => {
     res.redirect('/login');
 });

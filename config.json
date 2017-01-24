@@ -6,7 +6,7 @@
         "secret": "MONDAYTUESDAYWEDNESDAY",
         "jwtencryptkey": "SomeKeyMustBe16CharactersOrMore",
         "rethinkdb": {
-            "db": "test",
+            "db": "cavalier",
             "host": "localhost",
             "port": 28015,
             "user": "admin",
@@ -23,7 +23,7 @@
         "secret": "MONDAYTUESDAYWEDNESDAY",
         "jwtencryptkey": "SomeKeyMustBe16CharactersOrMore",
         "rethinkdb": {
-            "db": "test",
+            "db": "cavalier",
             "host": "localhost",
             "port": 28015,
             "user": "admin",

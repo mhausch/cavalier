@@ -1,10 +1,11 @@
-// 'use strict';
+'use strict';
 
 const bcrypt = require('bcryptjs');
 const _ = require('lodash');
 
 // Export
 const users = exports = module.exports = {};
+users.db = {};
 
 // user.insert = () => {
 //     users.getUser()
@@ -36,6 +37,7 @@ users.trimUsernamePassword = (user) => {
  * Converts value of an Object to upper case
  * @param {object} user - Object contains user data
  * @param {array} upperKeys - Arrays of Key to identify which values should be Upper
+ * @returns {object} output user object
  */
 users.toUpper = (user, upperKeys) => {
     const outUser = _.mapValues(user, (value, key) => {
@@ -48,6 +50,7 @@ users.toUpper = (user, upperKeys) => {
  * Converts value of an Object to lower case
  * @param {object} user - Object contains user data
  * @param {array} lowerKeys - Arrays of Key to identify which values should be Upper
+ * @returns {object} output user object
  */
 users.toLower = (user, lowerKeys) => {
     const outUser = _.mapValues(user, (value, key) => {
@@ -55,6 +58,7 @@ users.toLower = (user, lowerKeys) => {
     });
     return outUser;
 };
+
 
 users.cryptPassword = function (password) {
     return bcrypt.hash(password, 10);

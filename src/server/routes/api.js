@@ -16,6 +16,7 @@ const jwt = require('jsonwebtoken');
  */
 const User = require('../../server/layers/objects/user.js');
 const users = require('../../server/layers/users.js');
+const orgs = require('../../server/layers/organizations.js');
 
 /*
  * =========================================================================== *
@@ -121,22 +122,27 @@ apiRouter.post('/newuser', (req, res) => {
     //     console.log(result1);
     // })
     // .catch((error) => { console.log(error); });
+    // const user = users.clean({
+    //     username: req.body.username,
+    //     password: req.body.password,
+    //     email: req.body.email,
+    // });
 
-    users.cryptPassword(req.body.password)
-    .then((result) => {
-        const user = users.clean({
-            username: req.body.username,
-            password: result,
-            email: req.body.email,
-        });
+    // users.cryptPassword(req.body.password)
+    // .then((result) => {
+    //     user.password = result;
 
-        console.log(user);
-    })
-    .catch(() => {
+    //     console.log(user);
+    // })
+    // .catch(() => {
 
+    // });
+
+    orgs.db.getTable().then((result) => {
+        console.log(result);
+    }).catch((error) => {
+        console.log(error);
     });
-
-
 
 
     // const user = new User(req.body);

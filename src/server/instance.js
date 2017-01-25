@@ -15,7 +15,7 @@ const Strategy = require('passport-local').Strategy;
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackConfig = require('../../webpack.config.js');
-const Store = require('./layers/sessions.js')(session);
+const RethinkStore = require('./layers/sessions.js');
 
 // Export
 const inst = exports = module.exports = {};
@@ -135,7 +135,7 @@ inst._setup = function () {
         resave: false,
         saveUninitialized: true,
         cookie: { maxAge: 60000 },
-        // store: new Store({}, this._db, this._logger),
+        store: new RethinkStore(null, this._config.rethinkdb),
     }));
 
     passport.use(new Strategy({ session: true }, (username, password, done) => {

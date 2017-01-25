@@ -57,35 +57,56 @@ organizations.schema = joi.object().keys({
 organizations.db.add = (org) => {
     return new Promise((resolve, reject) => {
         rconnect.connect()
-        .then(connection => r.table(organizations.constants.TABLE)
-            .insert(org)
-            .run(connection))
-        .then(result => resolve(result))
-        .catch(error => reject(error));
+        .then((connection) => {
+            r.table(organizations.constants.TABLE).insert(org).run(connection)
+            .then((result) => {
+                resolve(result);
+                connection.close();
+            })
+            .catch(error => reject(error));
+        });
     });
 };
 
 organizations.db.get = (key) => {
     return new Promise((resolve, reject) => {
         rconnect.connect()
-        .then(connection => r.table(organizations.constants.TABLE)
-            .get(key)
-            .run(connection))
-        .then(result => resolve(result))
-        .catch(error => reject(error));
+        .then((connection) => {
+            r.table(organizations.constants.TABLE).get(key).run(connection)
+            .then((result) => {
+                resolve(result);
+                connection.close();
+            })
+            .catch(error => reject(error));
+        });
     });
 };
 
 organizations.db.getTable = () => {
     return new Promise((resolve, reject) => {
         rconnect.connect()
-        .then(connection => r.table(organizations.constants.TABLE)
-            .run(connection))
-        .then(cursor => cursor.toArray())
-        .then(result => resolve(result))
-        .catch(error => reject(error));
+        .then((connection) => {
+            r.table(organizations.constants.TABLE).run(connection)
+            .then(cursor => cursor.toArray())
+            .then((result) => {
+                resolve(result);
+                connection.close();
+            })
+            .catch(error => reject(error));
+        });
     });
 };
+
+// organizations.db.getTable = () => {
+//     return new Promise((resolve, reject) => {
+//         rconnect.connect()
+//         .then(connection => r.table(organizations.constants.TABLE)
+//             .run(connection))
+//         .then(cursor => cursor.toArray())
+//         .then(result => resolve(result))
+//         .catch(error => reject(error));
+//     });
+// };
 
 organizations.db.change = (org) => {
     const cloneOrg = _.clone(org);
@@ -93,24 +114,28 @@ organizations.db.change = (org) => {
 
     return new Promise((resolve, reject) => {
         rconnect.connect()
-        .then(connection => r.table(organizations.constants.TABLE)
-            .get(org.techname)
-            .update(cloneOrg)
-            .run(connection))
-        .then(result => resolve(result))
-        .catch(error => reject(error));
+        .then((connection) => {
+            r.table(organizations.constants.TABLE).update(cloneOrg).run(connection)
+            .then((result) => {
+                resolve(result);
+                connection.close();
+            })
+            .catch(error => reject(error));
+        });
     });
 };
-
 
 organizations.db.remove = (key) => {
     return new Promise((resolve, reject) => {
         rconnect.connect()
-        .then(connection => r.table(organizations.constants.TABLE)
-            .delete(key)
-            .run(connection))
-        .then(result => resolve(result))
-        .catch(error => reject(error));
+        .then((connection) => {
+            r.table(organizations.constants.TABLE).get(key).delete().run(connection)
+            .then((result) => {
+                resolve(result);
+                connection.close();
+            })
+            .catch(error => reject(error));
+        });
     });
 };
 

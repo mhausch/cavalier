@@ -144,6 +144,18 @@ apiRouter.post('/newuser', (req, res) => {
         console.log(error);
     });
 
+    orgs.db.remove('TESTORG').then((result) => {
+        console.log(result);
+
+        orgs.db.getTable().then((result) => {
+            console.log(result);
+        }).catch((error) => {
+            console.log(error);
+        });
+    }).catch((error) => {
+        console.log(error);
+    });
+
 
     // const user = new User(req.body);
 

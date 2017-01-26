@@ -49,6 +49,11 @@ appRouter.get('/logout', (req, res) => {
     // });
 
     req.logout();
+    req.session.destroy(() => {
+        // req.session = null;
+        // req.sessionID = null;
+        // res.redirect('*');
+    });
     res.redirect('*');
 });
 
@@ -65,6 +70,7 @@ appRouter.get('*', (req, res) => {
 appRouter.post('/login', passport.authenticate('local', { failureRedirect: '/login' }), (req, res) => {
     // if (req.body && req.body.username) {
     //     req.session.user = { username: 'noob' };
+        //req.login();
         res.redirect('client');
     // } else {
     //     res.redirect('login');

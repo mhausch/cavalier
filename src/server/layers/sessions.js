@@ -32,11 +32,18 @@ class RethinkStore extends Store {
 
         r.connect(dbconfig)
         .then((connection) => {
-            r.tableCreate(options.table).indexCreate('expires').run(connection)
-            .then((result) => {
-                if (result.tables_created === 1) {
-                    connection.addListener('cleanup', RethinkStore.cleanUp);
+            r.tableList().run(connection)
+            .then((list) => {
+                if (list.indexOf(options.table) === -1) {
+                    r.tableCreate(options.table).indexCreate('expires').run(connection)
+                    .then((result) => {
+                        if (result.tables_created === 1) {
+                            connection.addListener('cleanup', RethinkStore.cleanUp);
+                        }
+                    });
                 }
+
+                connection.close();
             });
         })
         .catch((error) => {
@@ -53,7 +60,14 @@ class RethinkStore extends Store {
 
         r.connect(self.db, (err, connection) => {
             r.table(self.options.table).get(sid).run(connection, (error, result) => {
-                cbfunc(error, result.session);
+
+                if (result) {
+                    cbfunc(error, result.session);
+                } else {
+                    cbfunc(error, result);
+                }
+
+
                 connection.close();
             });
         });
@@ -69,7 +83,7 @@ class RethinkStore extends Store {
         };
 
         r.connect(self.db, (err, connection) => {
-            r.table(self.options.table).insert(sessObj).run(connection, (error, result) => {
+            r.table(self.options.table).insert(sessObj, { conflict: 'update' }).run(connection, (error, result) => {
                 cbfunc(error);
                 connection.close();
             });

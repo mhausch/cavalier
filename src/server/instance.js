@@ -134,7 +134,7 @@ inst._setup = function () {
         secret: self.getSecretBase64(),
         resave: false,
         saveUninitialized: true,
-        cookie: { maxAge: 60000 },
+        cookie: { maxAge: 600000 },
         store: new RethinkStore(null, this._config.rethinkdb),
     }));
 

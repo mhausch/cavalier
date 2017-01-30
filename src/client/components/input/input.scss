@@ -38,13 +38,15 @@ $padding_v_lg: $padding_v;
  */
 $text_indent: 16px;
 
+$text_indent: 16px;
+
 .input {
     text-indent: $text_indent;
     outline: none;
     width: 100%;
     border: $border_width solid $border_color;
     line-height: $line_height;
-    padding: $padding_h $padding_v;
+    padding: $padding_h 0;
     font-size: $fontsize;
     color: $font_color;
 }

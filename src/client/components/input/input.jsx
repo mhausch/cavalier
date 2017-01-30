@@ -35,7 +35,6 @@ export default class CInput extends React.Component {
 
 }
 
-
 CInput.PropTypes = {
     type: React.PropTypes.string,
     placeholder: React.PropTypes.string,

@@ -126,11 +126,11 @@ class Login extends React.Component {
             );
         }
 
-        return (<div className="container">
+        return (<div className="container root">
             <CDocking open={this.state.docking} clickClose={this.cli.bind(this)} >
                 {this.getError()}
             </CDocking>
-            <div className="row center-xs">
+            <div className="row fullheight middle-xs center-xs">
                 <div className="col-xs-10 col-sm-4 col-lg-3">
                     <form method="post" action="/login">
                         <div className="row">
